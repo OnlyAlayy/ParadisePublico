@@ -1,4 +1,4 @@
-// server.js (CON MONGODB - VERSIÓN FINAL)
+// server.js (CON MONGODB - VERSIÓN FINAL CON CAMPO COMO NOS ENCONTRO - BOTONES 2+1 EN MÓVIL)
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
@@ -104,10 +104,11 @@ app.get('/api/health', (req, res) => {
   })
 })
 
-// Endpoint de inscripción (mantén tu código existente)
+// ✅ ENDPOINT DE INSCRIPCIÓN ACTUALIZADO CON CAMPO "COMO NOS ENCONTRO"
 app.post('/api/inscripcion', async (req, res) => {
   try {
-    const { nombreNino, edad, nombreAdulto, telefono, email, horario, mensaje } = req.body
+    // ✅ AGREGAMOS "comoNosEncontro" A LA DESTRUCTURACIÓN
+    const { nombreNino, edad, nombreAdulto, telefono, email, horario, comoNosEncontro, mensaje } = req.body
 
     console.log('📝 Nueva inscripción recibida:', { 
       nombreNino, 
@@ -115,7 +116,10 @@ app.post('/api/inscripcion', async (req, res) => {
       nombreAdulto, 
       telefono: telefono ? '***' + telefono.slice(-3) : 'no proporcionado',
       email: email ? '***' + email.slice(-5) : 'no proporcionado',
-      horario 
+      horario,
+      // ✅ AGREGAMOS LOG DEL NUEVO CAMPO
+      comoNosEncontro: comoNosEncontro || 'No especificado',
+      mensaje: mensaje ? 'Sí' : 'No'
     })
 
     // Validar campos requeridos
@@ -129,10 +133,23 @@ app.post('/api/inscripcion', async (req, res) => {
     let emailEnviado = false
     let whatsappEnviado = false
 
-    // 1. ENVIAR EMAIL A LA DUEÑA
+    // 1. ENVIAR EMAIL A LA DUEÑA (ACTUALIZADO CON COMO NOS ENCONTRO)
     try {
       const mensajeContacto = `Hola ${nombreAdulto}, soy July de Taller Paradise. Recibí la inscripción de ${nombreNino} para el horario de ${horario}. ¿Te parece si coordinamos los detalles? ¡Estoy muy emocionada de tener a ${nombreNino} en el taller! 🎨`
       const enlaceWhatsApp = generarEnlaceWhatsApp(telefono, mensajeContacto)
+      
+      // ✅ MAPA DE ICONOS PARA MOSTRAR EN EL EMAIL
+      const iconosComoNosEncontro = {
+        'Instagram': '📸',
+        'Facebook': '📘',
+        'Google': '🔍',
+        'Recomendación': '💬',
+        'WhatsApp': '📱',
+        'Volante': '📄',
+        'Otro': '✨'
+      }
+      
+      const iconoSeleccionado = iconosComoNosEncontro[comoNosEncontro] || '🔍'
       
       const mailOptions = {
         from: `"Taller Paradise" <${process.env.EMAIL_USER}>`,
@@ -143,48 +160,276 @@ app.post('/api/inscripcion', async (req, res) => {
           <html>
           <head>
             <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
             <style>
               @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-              body { font-family: 'Poppins', sans-serif; margin: 0; padding: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-              .container { max-width: 600px; margin: 20px auto; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-              .header { background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%); padding: 40px 20px; text-align: center; color: white; }
-              .header h1 { margin: 0; font-size: 32px; font-weight: 700; }
-              .header p { margin: 10px 0 0; font-size: 18px; opacity: 0.9; }
-              .content { padding: 40px; }
-              .info-section { background: #f8f9fa; border-radius: 15px; padding: 25px; margin-bottom: 25px; border-left: 5px solid #4ECDC4; }
-              .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-              .info-item { background: white; padding: 15px; border-radius: 10px; border: 1px solid #e9ecef; }
-              .info-label { font-weight: 600; color: #6c757d; font-size: 14px; }
-              .info-value { font-weight: 500; color: #2c3e50; font-size: 16px; margin-top: 5px; }
-              .contact-actions { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); padding: 25px; border-radius: 15px; text-align: center; }
-              .btn { display: inline-block; padding: 12px 25px; margin: 8px; border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; }
-              .btn-whatsapp { background: #25D366; color: white; }
-              .btn-call { background: #4A90E2; color: white; }
-              .btn-email { background: #EA4335; color: white; }
-              .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-              .footer { text-align: center; padding: 20px; background: #2c3e50; color: white; font-size: 12px; }
-              .highlight { background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%); padding: 20px; border-radius: 15px; text-align: center; margin: 20px 0; }
-              @media (max-width: 600px) {
-                .info-grid { grid-template-columns: 1fr; }
-                .btn { display: block; margin: 8px 0; }
+              * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+              }
+              body { 
+                font-family: 'Poppins', sans-serif; 
+                margin: 0; 
+                padding: 0; 
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                width: 100%;
+                -webkit-text-size-adjust: 100%;
+                -ms-text-size-adjust: 100%;
+              }
+              .container { 
+                max-width: 600px; 
+                width: 100%;
+                margin: 20px auto; 
+                background: white; 
+                border-radius: 20px; 
+                overflow: hidden; 
+                box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+              }
+              .header { 
+                background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%); 
+                padding: 30px 20px; 
+                text-align: center; 
+                color: white; 
+              }
+              .header h1 { 
+                margin: 0; 
+                font-size: 28px; 
+                font-weight: 700; 
+                line-height: 1.3;
+              }
+              .header p { 
+                margin: 10px 0 0; 
+                font-size: 16px; 
+                opacity: 0.9; 
+              }
+              .content { 
+                padding: 25px 20px; 
+              }
+              .info-section { 
+                background: #f8f9fa; 
+                border-radius: 15px; 
+                padding: 20px; 
+                margin-bottom: 20px; 
+                border-left: 5px solid #4ECDC4; 
+              }
+              .info-section h3 {
+                font-size: 18px;
+                margin-bottom: 15px;
+                color: #2c3e50;
+              }
+              .info-grid { 
+                display: grid; 
+                grid-template-columns: 1fr 1fr; 
+                gap: 12px; 
+              }
+              .info-item { 
+                background: white; 
+                padding: 12px; 
+                border-radius: 10px; 
+                border: 1px solid #e9ecef;
+                word-break: break-word;
+                overflow-wrap: break-word;
+              }
+              .info-label { 
+                font-weight: 600; 
+                color: #6c757d; 
+                font-size: 13px; 
+                margin-bottom: 4px;
+              }
+              .info-value { 
+                font-weight: 500; 
+                color: #2c3e50; 
+                font-size: 15px; 
+                line-height: 1.4;
+              }
+              .info-value a {
+                word-break: break-all;
+                display: inline-block;
+                max-width: 100%;
+              }
+              .contact-actions { 
+                background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); 
+                padding: 25px 20px; 
+                border-radius: 15px; 
+                text-align: center; 
+              }
+              .contact-actions h3 {
+                font-size: 18px;
+                margin-bottom: 10px;
+                color: #2c3e50;
+              }
+              .contact-actions p {
+                font-size: 14px;
+                margin-bottom: 20px;
+                color: #6c757d;
+              }
+              .btn-container {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 12px;
+              }
+              .btn { 
+                display: inline-block; 
+                padding: 14px 24px; 
+                border-radius: 50px; 
+                text-decoration: none; 
+                font-weight: 600; 
+                font-size: 15px;
+                transition: all 0.3s ease;
+                text-align: center;
+                min-width: 160px;
+              }
+              .btn-whatsapp { 
+                background: #25D366; 
+                color: white; 
+              }
+              .btn-call { 
+                background: #4A90E2; 
+                color: white; 
+              }
+              .btn-email { 
+                background: #EA4335; 
+                color: white; 
+              }
+              .btn:hover { 
+                transform: translateY(-2px); 
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2); 
+              }
+              .footer { 
+                text-align: center; 
+                padding: 20px; 
+                background: #2c3e50; 
+                color: white; 
+                font-size: 12px; 
+              }
+              .highlight { 
+                background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%); 
+                padding: 20px; 
+                border-radius: 15px; 
+                text-align: center; 
+                margin-bottom: 20px; 
+              }
+              .highlight h2 {
+                font-size: 22px;
+                margin-bottom: 8px;
+              }
+              .highlight p {
+                font-size: 15px;
+              }
+              .extra-info {
+                margin-top: 20px;
+                padding-top: 20px;
+                border-top: 2px dashed #4ECDC4;
+              }
+              .extra-item {
+                background: white;
+                padding: 15px;
+                border-radius: 10px;
+                border: 1px solid #e9ecef;
+                word-break: break-word;
+                overflow-wrap: break-word;
+              }
+              .extra-item-row {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+              }
+              .extra-icon {
+                font-size: 28px;
+                flex-shrink: 0;
+                line-height: 1;
+              }
+              .extra-content {
+                flex: 1;
+                min-width: 0;
+              }
+              .extra-label {
+                font-weight: 600;
+                color: #6c757d;
+                font-size: 13px;
+                margin-bottom: 4px;
+              }
+              .extra-value {
+                font-weight: 500;
+                color: #2c3e50;
+                font-size: 15px;
+                line-height: 1.4;
+              }
+              .badge {
+                background: #4ECDC4;
+                color: white;
+                padding: 4px 12px;
+                border-radius: 50px;
+                font-size: 13px;
+                font-weight: 600;
+                display: inline-block;
+              }
+              
+              /* Estilos para escritorio (3 botones en línea) */
+              @media (min-width: 769px) {
+                .btn-container {
+                  flex-direction: row;
+                }
+                .btn {
+                  flex: 0 1 auto;
+                }
+              }
+              
+              /* Estilos para móvil (2+1) */
+              @media (max-width: 768px) {
+                .btn-container {
+                  flex-direction: row;
+                  flex-wrap: wrap;
+                  gap: 12px;
+                }
+                .btn {
+                  flex: 0 1 calc(50% - 6px);
+                  min-width: 0;
+                  padding: 14px 10px;
+                  font-size: 15px;
+                }
+                .btn:last-child {
+                  flex: 0 1 100%;
+                }
+              }
+              
+              /* Móviles muy pequeños */
+              @media (max-width: 480px) {
+                .header h1 { font-size: 24px; }
+                .content { padding: 20px 15px; }
+                .info-grid { grid-template-columns: 1fr; gap: 10px; }
+                .info-section { padding: 15px; }
+                .extra-item-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+                .extra-icon { font-size: 24px; }
+                .highlight h2 { font-size: 20px; }
+                
+                .btn-container {
+                  gap: 10px;
+                }
+                .btn {
+                  padding: 12px 8px;
+                  font-size: 14px;
+                }
               }
             </style>
           </head>
           <body>
             <div class="container">
               <div class="header">
-                <h1> ¡Nueva Inscripción!</h1>
+                <h1> 🎨 ¡Nueva Inscripción!</h1>
                 <p>Taller Paradise - Un nuevo artista se une a nuestra familia</p>
               </div>
               
               <div class="content">
                 <div class="highlight">
                   <h2 style="margin: 0; color: #2c3e50;">¡Buenas noticias! 🎉</h2>
-                  <p style="margin: 10px 0 0; font-size: 16px; color: #2c3e50;">Tienes una nueva inscripción esperando por ti</p>
+                  <p style="margin: 10px 0 0; color: #2c3e50;">Tienes una nueva inscripción esperando por ti</p>
                 </div>
 
                 <div class="info-section">
-                  <h3> Información del Pequeño Artista</h3>
+                  <h3> 👶 Información del Pequeño Artista</h3>
                   <div class="info-grid">
                     <div class="info-item">
                       <div class="info-label">Nombre del Niño/a</div>
@@ -198,7 +443,7 @@ app.post('/api/inscripcion', async (req, res) => {
                 </div>
 
                 <div class="info-section">
-                  <h3> Información del Responsable</h3>
+                  <h3> 👤 Información del Responsable</h3>
                   <div class="info-grid">
                     <div class="info-item">
                       <div class="info-label">Nombre del Adulto</div>
@@ -210,34 +455,55 @@ app.post('/api/inscripcion', async (req, res) => {
                     </div>
                     <div class="info-item">
                       <div class="info-label">Email</div>
-                      <div class="info-value"><a href="mailto:${email}" style="color: #EA4335; text-decoration: none;">${email}</a></div>
+                      <div class="info-value"><a href="mailto:${email}" style="color: #EA4335; text-decoration: none; word-break: break-all;">${email}</a></div>
                     </div>
                     <div class="info-item">
                       <div class="info-label">Horario Preferido</div>
                       <div class="info-value" style="color: #e74c3c; font-weight: 600;">${horario}</div>
                     </div>
-                    ${mensaje ? `
-                    <div class="info-item" style="grid-column: 1 / -1;">
-                      <div class="info-label">Mensaje Adicional</div>
-                      <div class="info-value">${mensaje}</div>
-                    </div>
-                    ` : ''}
                   </div>
+                  
+                  <!-- ✅ SECCIÓN ADICIONAL: CÓMO NOS ENCONTRÓ -->
+                  ${comoNosEncontro ? `
+                  <div class="extra-info">
+                    <div class="extra-item">
+                      <div class="extra-item-row">
+                        <div class="extra-icon">${iconoSeleccionado}</div>
+                        <div class="extra-content">
+                          <div class="extra-label">📊 ¿Cómo nos encontró?</div>
+                          <div><span class="badge">${comoNosEncontro}</span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  ` : ''}
+                  
+                  <!-- ✅ SECCIÓN ADICIONAL: MENSAJE -->
+                  ${mensaje ? `
+                  <div class="extra-info">
+                    <div class="extra-item">
+                      <div class="extra-label" style="margin-bottom: 8px;">💬 Mensaje Adicional</div>
+                      <div class="extra-value">${mensaje}</div>
+                    </div>
+                  </div>
+                  ` : ''}
                 </div>
 
                 <div class="contact-actions">
                   <h3 style="margin-top: 0; color: #2c3e50;">📞 Contacta al Responsable</h3>
-                  <p style="color: #6c757d; margin-bottom: 20px;">Haz clic en cualquiera de estas opciones para contactar inmediatamente</p>
+                  <p style="color: #6c757d; margin-bottom: 20px;">Haz clic para contactar</p>
                   
-                  <a href="${enlaceWhatsApp}" class="btn btn-whatsapp" target="_blank">
-                    💬 Enviar WhatsApp
-                  </a>
-                  <a href="tel:${telefono}" class="btn btn-call">
-                    📞 Llamar por Teléfono
-                  </a>
-                  <a href="mailto:${email}" class="btn btn-email">
-                    📧 Enviar Email
-                  </a>
+                  <div class="btn-container">
+                    <a href="${enlaceWhatsApp}" class="btn btn-whatsapp" target="_blank">
+                      💬 WhatsApp
+                    </a>
+                    <a href="tel:${telefono}" class="btn btn-call">
+                      📞 Llamar
+                    </a>
+                    <a href="mailto:${email}" class="btn btn-email">
+                      📧 Mail
+                    </a>
+                  </div>
                 </div>
               </div>
               
@@ -263,8 +529,22 @@ app.post('/api/inscripcion', async (req, res) => {
       console.log('❌ Error enviando email a la dueña:', emailError.message)
     }
 
-    // 2. ENVIAR WHATSAPP A LA DUEÑA
+    // 2. ENVIAR WHATSAPP A LA DUEÑA (ACTUALIZADO CON COMO NOS ENCONTRO)
     try {
+      // ✅ MAPA DE ICONOS PARA WHATSAPP
+      const iconosWhatsApp = {
+        'Instagram': '📸',
+        'Facebook': '📘',
+        'Google': '🔍',
+        'Recomendación': '💬',
+        'WhatsApp': '📱',
+        'Volante': '📄',
+        'Otro': '✨'
+      }
+      
+      const iconoWA = iconosWhatsApp[comoNosEncontro] || '🔍'
+      const referenciaTexto = comoNosEncontro ? `${iconoWA} Nos encontró por: ${comoNosEncontro}` : ''
+      
       const mensajeWhatsApp = `🧑‍🎨 NUEVA INSCRIPCIÓN - Taller Paradise
 
 👶 Niño/a: ${nombreNino}
@@ -273,6 +553,7 @@ app.post('/api/inscripcion', async (req, res) => {
 📞 Teléfono: ${telefono}
 📧 Email: ${email}
 🕒 Horario: ${horario}
+${referenciaTexto ? `📊 ${referenciaTexto}` : ''}
 ${mensaje ? `💬 Mensaje: ${mensaje}` : ''}
 
 ¡Contacta al responsable lo antes posible! 🎨`
@@ -290,12 +571,17 @@ ${mensaje ? `💬 Mensaje: ${mensaje}` : ''}
       console.log('❌ Error enviando WhatsApp a la dueña:', whatsappError.message)
     }
 
+    // ✅ DEVOLVEMOS EL NUEVO CAMPO EN LA RESPUESTA
     res.json({ 
       success: true, 
       message: 'Inscripción enviada correctamente. La dueña del taller te contactará pronto.',
       notifications: {
         email: emailEnviado,
         whatsapp: whatsappEnviado
+      },
+      // ✅ INCLUIMOS EL DATO EN LA RESPUESTA
+      data: {
+        comoNosEncontro: comoNosEncontro || null
       }
     })
 
@@ -304,16 +590,15 @@ ${mensaje ? `💬 Mensaje: ${mensaje}` : ''}
     res.status(500).json({ 
       success: false, 
       message: 'Error interno del servidor' 
-    })
+    });
   }
-})
+});
 
 // ============================
 // ENDPOINTS DE RECUERDOS CON MONGODB
 // ============================
 
 // GET - Obtener todos los recuerdos (público)
-// GET - Obtener todos los recuerdos (ACTUALIZADO con compatibilidad)
 app.get('/api/recuerdos', async (req, res) => {
   try {
     const { pagina = 1, limite = 12, tipo, destacado } = req.query;
@@ -386,7 +671,6 @@ app.get('/api/recuerdos/:id', async (req, res) => {
 });
 
 // POST - Crear nuevo recuerdo (PROTEGIDO)
-// POST - Crear nuevo recuerdo (MEJORADO)
 app.post('/api/recuerdos', authenticateAdmin, async (req, res) => {
   try {
     const { titulo, descripcion, fecha, tipo, fotoPortada, galeria = [], destacado = false } = req.body;
@@ -440,7 +724,6 @@ app.post('/api/recuerdos', authenticateAdmin, async (req, res) => {
 });
 
 // PUT - Actualizar recuerdo existente (PROTEGIDO)
-// PUT - Actualizar recuerdo existente (ACTUALIZADO)
 app.put('/api/recuerdos/:id', authenticateAdmin, async (req, res) => {
   try {
     const { titulo, descripcion, fecha, tipo, fotoPortada, galeria, destacado } = req.body;
@@ -517,8 +800,6 @@ app.delete('/api/recuerdos/:id', authenticateAdmin, async (req, res) => {
 });
 
 // Endpoint para subir imágenes a Cloudinary (PROTEGIDO)
-// ✅ MEJORAR el endpoint de upload en server.js
-// ✅ REEMPLAZAR completamente el endpoint de upload con esta versión:
 app.post('/api/upload-image', authenticateAdmin, async (req, res) => {
   try {
     const { image, resourceType = 'auto' } = req.body;
@@ -614,6 +895,7 @@ app.listen(PORT, () => {
   console.log(`📱 Notificaciones WhatsApp: ${process.env.TWILIO_SID ? 'ACTIVAS' : 'INACTIVAS'}`)
   console.log(`🌐 CORS configurado para producción`)
   console.log(`📝 Endpoints CRUD completos`)
+  console.log(`📊 Campo "Cómo nos encontraste" AGREGADO a inscripciones`)
   console.log('🚀 ========================================')
 });
 

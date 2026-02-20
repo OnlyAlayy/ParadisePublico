@@ -78,12 +78,13 @@ const SvgIcons = {
 };
 
 const AdminRecuerdos = () => {
-  const BACKEND_URL = 'http://localhost:3001';
-  const ADMIN_TOKEN = import.meta.env.VITE_ADMIN_TOKEN || 'taller-paradise-admin-2024';
-  
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+  const URL_TOKEN = import.meta.env.VITE_URL_TOKEN;
+  const LOGIN_PASSWORD = import.meta.env.VITE_LOGIN_PASSWORD;
+
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  
+
   const [recuerdos, setRecuerdos] = useState([]);
   const [formData, setFormData] = useState({
     titulo: '',
@@ -103,15 +104,13 @@ const AdminRecuerdos = () => {
   const [modoEdicion, setModoEdicion] = useState(false);
   const [recuerdoEditando, setRecuerdoEditando] = useState(null);
   const [vista, setVista] = useState('lista');
+  const [portadaActual, setPortadaActual] = useState(null); // URL de la portada existente
+  const [galeriaActual, setGaleriaActual] = useState([]);   // Array de objetos { url, tipo, _id? } de la galería existente
 
-  // ✅ VERIFICACIÓN CORREGIDA: Más estricta y sin conflictos
   useEffect(() => {
     const verificarAutenticacion = () => {
-      // SOLO usar localStorage para persistencia
       const tokenLocalStorage = localStorage.getItem('admin_token');
       const loginTime = localStorage.getItem('admin_login_time');
-      
-      // Token de URL solo para acceso inicial (una vez)
       const tokenURL = searchParams.get('token');
 
       console.log('🔍 Verificando autenticación:', {
@@ -123,28 +122,24 @@ const AdminRecuerdos = () => {
       let tokenValido = false;
       let fuenteToken = '';
 
-      // ✅ CORREGIDO: Verificación más estricta
-      if (tokenLocalStorage && tokenLocalStorage === ADMIN_TOKEN) {
+      if (tokenLocalStorage && tokenLocalStorage === URL_TOKEN) {
         tokenValido = true;
         fuenteToken = 'localStorage';
-      } else if (tokenURL && tokenURL === ADMIN_TOKEN) {
+      } else if (tokenURL && tokenURL === URL_TOKEN) {
         tokenValido = true;
         fuenteToken = 'URL';
-        
-        // Guardar token de URL en localStorage SOLO si es válido
-        localStorage.setItem('admin_token', ADMIN_TOKEN);
+
+        localStorage.setItem('admin_token', URL_TOKEN);
         localStorage.setItem('admin_login_time', new Date().getTime().toString());
-        
-        // Limpiar token de la URL por seguridad
+
         navigate('/admin/recuerdos', { replace: true });
       }
 
       if (tokenValido) {
         console.log(`✅ Token válido encontrado en: ${fuenteToken}`);
-        
-        // Verificar expiración de sesión
+
         const sesionExpirada = verificarSesionExpirada();
-        
+
         if (!sesionExpirada) {
           setAutenticado(true);
           setMostrarLogin(false);
@@ -153,7 +148,6 @@ const AdminRecuerdos = () => {
           console.log('⏰ Sesión expirada, mostrando login');
           setMostrarLogin(true);
           setAutenticado(false);
-          // Limpiar datos de sesión expirada
           localStorage.removeItem('admin_token');
           localStorage.removeItem('admin_login_time');
         }
@@ -161,43 +155,40 @@ const AdminRecuerdos = () => {
         console.log('🔒 No se encontró token válido, mostrando login');
         setMostrarLogin(true);
         setAutenticado(false);
-        // Asegurarse de limpiar cualquier dato residual
         localStorage.removeItem('admin_token');
         localStorage.removeItem('admin_login_time');
       }
     };
 
     verificarAutenticacion();
-  }, [ADMIN_TOKEN, navigate, searchParams]);
+  }, [URL_TOKEN, navigate, searchParams]);
 
-  // ✅ CORREGIDO: Verificar expiración de sesión
   const verificarSesionExpirada = () => {
     const loginTime = localStorage.getItem('admin_login_time');
     if (!loginTime) {
       console.log('⏰ No hay tiempo de login registrado');
-      return true; // Considerar como expirado
+      return true;
     }
 
     const currentTime = new Date().getTime();
     const sessionDuration = 3 * 60 * 60 * 1000; // 3 horas
-    
+
     const tiempoTranscurrido = currentTime - parseInt(loginTime);
     const expirado = tiempoTranscurrido > sessionDuration;
-    
+
     if (expirado) {
       console.log('🕒 Sesión expirada:', {
         tiempoTranscurrido: Math.round(tiempoTranscurrido / 1000 / 60) + ' minutos',
         limite: '3 horas'
       });
     }
-    
+
     return expirado;
   };
 
-  // ✅ CORREGIDO: Verificar autenticación antes de cada acción
   const verificarYRenovarSesion = () => {
     const sesionExpirada = verificarSesionExpirada();
-    
+
     if (sesionExpirada) {
       console.log('🚫 Sesión expirada en verificación');
       setError('Tu sesión ha expirado. Por favor inicia sesión nuevamente.');
@@ -207,13 +198,11 @@ const AdminRecuerdos = () => {
       localStorage.removeItem('admin_login_time');
       return false;
     }
-    
-    // Renovar tiempo de sesión en cada acción importante
+
     localStorage.setItem('admin_login_time', new Date().getTime().toString());
     return true;
   };
 
-  // Cargar recuerdos al autenticar
   useEffect(() => {
     if (autenticado) {
       if (verificarYRenovarSesion()) {
@@ -222,14 +211,13 @@ const AdminRecuerdos = () => {
     }
   }, [autenticado]);
 
-  // Función para cargar recuerdos
   const cargarRecuerdos = async () => {
     try {
       if (!verificarYRenovarSesion()) return;
-      
+
       const response = await fetch(`${BACKEND_URL}/api/recuerdos`);
       const result = await response.json();
-      
+
       if (result.success) {
         setRecuerdos(result.recuerdos);
       }
@@ -239,41 +227,34 @@ const AdminRecuerdos = () => {
     }
   };
 
-  // ✅ CORREGIDO: Función de login mejorada
   const manejarLogin = (e) => {
     e.preventDefault();
-    
-    if (password === ADMIN_TOKEN) {
-      // ✅ CORREGIDO: Limpiar cualquier dato anterior y establecer nueva sesión
-      localStorage.setItem('admin_token', ADMIN_TOKEN);
+
+    if (password === LOGIN_PASSWORD) {
+      localStorage.setItem('admin_token', URL_TOKEN);
       localStorage.setItem('admin_login_time', new Date().getTime().toString());
-      
+
       setAutenticado(true);
       setMostrarLogin(false);
       setError('');
       setSuccess('¡Sesión iniciada correctamente!');
-      
-      // Limpiar mensaje de éxito después de 3 segundos
+
       setTimeout(() => setSuccess(''), 3000);
-      
+
       console.log('🔑 Sesión iniciada exitosamente - Token guardado en localStorage');
     } else {
       setError('Contraseña incorrecta');
-      // Limpiar datos en caso de error
       localStorage.removeItem('admin_token');
       localStorage.removeItem('admin_login_time');
     }
   };
 
-  // ✅ CORREGIDO: Función para cerrar sesión COMPLETAMENTE
   const cerrarSesion = () => {
     console.log('🚪 Cerrando sesión...');
-    
-    // ✅ CORREGIDO: Limpiar TODOS los datos de sesión
+
     localStorage.removeItem('admin_token');
     localStorage.removeItem('admin_login_time');
-    
-    // Resetear TODO el estado
+
     setAutenticado(false);
     setMostrarLogin(true);
     setPassword('');
@@ -281,14 +262,12 @@ const AdminRecuerdos = () => {
     setError('');
     setSuccess('');
     setVista('lista');
-    
-    // ✅ IMPORTANTE: Redirigir al home y forzar recarga para limpiar estado
+
     navigate('/');
-    
+
     console.log('✅ Sesión cerrada completamente - Redirigiendo al home');
   };
 
-  // Resto de las funciones se mantienen igual...
   const subirACloudinary = async (archivo) => {
     if (!verificarYRenovarSesion()) {
       throw new Error('Sesión expirada');
@@ -319,7 +298,7 @@ const AdminRecuerdos = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-auth-token': ADMIN_TOKEN
+          'x-auth-token': URL_TOKEN
         },
         body: JSON.stringify({
           image: base64,
@@ -333,7 +312,7 @@ const AdminRecuerdos = () => {
       }
 
       const result = await response.json();
-      
+
       if (result.success) {
         console.log('✅ Archivo subido correctamente:', result.imageUrl);
         return {
@@ -377,12 +356,12 @@ const AdminRecuerdos = () => {
     if (!verificarYRenovarSesion()) {
       throw new Error('Sesión expirada');
     }
-    
+
     const response = await fetch(`${BACKEND_URL}/api/recuerdos`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-auth-token': ADMIN_TOKEN
+        'x-auth-token': URL_TOKEN
       },
       body: JSON.stringify(recuerdoData)
     });
@@ -393,12 +372,12 @@ const AdminRecuerdos = () => {
     if (!verificarYRenovarSesion()) {
       throw new Error('Sesión expirada');
     }
-    
+
     const response = await fetch(`${BACKEND_URL}/api/recuerdos/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'x-auth-token': ADMIN_TOKEN
+        'x-auth-token': URL_TOKEN
       },
       body: JSON.stringify(recuerdoData)
     });
@@ -424,12 +403,12 @@ const AdminRecuerdos = () => {
       const response = await fetch(`${BACKEND_URL}/api/recuerdos/${id}`, {
         method: 'DELETE',
         headers: {
-          'x-auth-token': ADMIN_TOKEN
+          'x-auth-token': URL_TOKEN
         }
       });
 
       const result = await response.json();
-      
+
       if (result.success) {
         setSuccess('Recuerdo eliminado correctamente');
         cargarRecuerdos();
@@ -442,14 +421,28 @@ const AdminRecuerdos = () => {
     }
   };
 
+  const eliminarPortadaActual = () => {
+    if (confirm('¿Eliminar la foto de portada actual? Luego deberás subir una nueva.')) {
+      setPortadaActual(null);
+      // Si estabas editando y no hay portada nueva, al guardar se requerirá una nueva (según validación)
+    }
+  };
+
+  const eliminarDeGaleriaActual = (index) => {
+    if (confirm('¿Eliminar este elemento de la galería?')) {
+      const nuevaGaleria = galeriaActual.filter((_, i) => i !== index);
+      setGaleriaActual(nuevaGaleria);
+    }
+  };
+
   const manejarSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!verificarYRenovarSesion()) {
       setError('Tu sesión ha expirado. Por favor inicia sesión nuevamente.');
       return;
     }
-    
+
     setSubiendo(true);
     setError('');
     setSuccess('');
@@ -461,8 +454,12 @@ const AdminRecuerdos = () => {
         urlFotoPortada = resultado.url;
       }
 
-      if (!urlFotoPortada && !modoEdicion) {
+      if (!urlFotoPortada && !portadaActual && !modoEdicion) {
         throw new Error('La foto de portada es requerida');
+      }
+      // Si estamos en edición y no hay portadaActual ni nueva, también es error
+      if (modoEdicion && !urlFotoPortada && !portadaActual) {
+        throw new Error('Debes mantener o subir una foto de portada');
       }
 
       const galeriaSubida = [];
@@ -485,12 +482,13 @@ const AdminRecuerdos = () => {
         console.warn('Algunos archivos no se pudieron subir:', erroresSubida);
       }
 
+      let galeriaFinal = modoEdicion ? [...galeriaActual] : [];
+      galeriaFinal = [...galeriaFinal, ...galeriaSubida];
+
       const recuerdoData = {
         ...formData,
         fotoPortada: urlFotoPortada,
-        galeria: modoEdicion 
-          ? [...(recuerdoEditando?.galeria || []), ...galeriaSubida]
-          : galeriaSubida
+        galeria: galeriaFinal
       };
 
       let result;
@@ -528,7 +526,7 @@ const AdminRecuerdos = () => {
     setArchivosGaleria([]);
     setModoEdicion(false);
     setRecuerdoEditando(null);
-    
+
     const inputs = document.querySelectorAll('input[type="file"]');
     inputs.forEach(input => input.value = '');
   };
@@ -542,11 +540,13 @@ const AdminRecuerdos = () => {
       tipo: recuerdo.tipo,
       destacado: recuerdo.destacado
     });
+    setPortadaActual(recuerdo.fotoPortada); // guardamos la URL de la portada actual
+    setGaleriaActual(recuerdo.galeria || []); // guardamos la galería actual
     setModoEdicion(true);
     setRecuerdoEditando(recuerdo);
     setVista('formulario');
-    setFotoPortada(null);
-    setArchivosGaleria([]);
+    setFotoPortada(null);     // para nueva portada
+    setArchivosGaleria([]);   // para nuevos archivos
   };
 
   const nuevoRecuerdo = () => {
@@ -572,7 +572,7 @@ const AdminRecuerdos = () => {
               Acceso Administrativo
             </h1>
             <p className="text-gray-600">Ingresa tu contraseña para continuar</p>
-            
+
             {success && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
@@ -653,7 +653,7 @@ const AdminRecuerdos = () => {
                 Administra y organiza los momentos especiales del taller
               </p>
             </motion.div>
-            
+
             <div className="flex flex-wrap gap-4 justify-center">
               <button
                 onClick={nuevoRecuerdo}
@@ -701,7 +701,7 @@ const AdminRecuerdos = () => {
               <SvgIcons.camera />
               Recuerdos Existentes
             </h2>
-            
+
             {recuerdos.length === 0 ? (
               <div className="text-center py-16">
                 <div className="w-24 h-24 mx-auto mb-6 text-gray-400">
@@ -732,11 +732,11 @@ const AdminRecuerdos = () => {
                         </div>
                       )}
                     </div>
-                    
+
                     <div className="p-6">
                       <h3 className="font-bold text-lg text-gray-800 mb-2 line-clamp-2">{recuerdo.titulo}</h3>
                       <p className="text-sm text-gray-600 mb-3 line-clamp-2">{recuerdo.descripcion}</p>
-                      
+
                       <div className="flex justify-between items-center mb-4">
                         <span className="text-xs bg-blue-100 text-blue-800 px-3 py-1 rounded-full capitalize font-medium">
                           {recuerdo.tipo}
@@ -795,7 +795,7 @@ const AdminRecuerdos = () => {
               {modoEdicion ? 'Modifica los datos del recuerdo existente' : 'Completa los datos para crear un nuevo recuerdo'}
             </p>
           </motion.div>
-          
+
           <div className="flex flex-wrap gap-4 justify-center">
             <button
               onClick={() => setVista('lista')}
@@ -840,7 +840,6 @@ const AdminRecuerdos = () => {
         {/* Formulario */}
         <div className="max-w-4xl mx-auto bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/30">
           <form onSubmit={manejarSubmit} className="space-y-8">
-            
             {/* Título */}
             <div>
               <label className="block text-lg font-semibold text-gray-800 mb-3">
@@ -930,9 +929,9 @@ const AdminRecuerdos = () => {
                     </p>
                     <p className="text-xs text-gray-500">PNG, JPG, GIF hasta 50MB</p>
                   </div>
-                  <input 
-                    type="file" 
-                    className="hidden" 
+                  <input
+                    type="file"
+                    className="hidden"
                     accept="image/*"
                     onChange={manejarSeleccionPortada}
                   />
@@ -944,6 +943,48 @@ const AdminRecuerdos = () => {
                 </div>
               )}
             </div>
+
+            {/* Mostrar portada actual si existe */}
+                {portadaActual && (
+                  <div className="mt-4 p-4 border rounded-2xl bg-gray-50">
+                    <p className="font-semibold mb-2">Foto de portada actual:</p>
+                    <div className="relative inline-block">
+                      <img src={portadaActual} alt="Portada" className="w-32 h-32 object-cover rounded-lg" />
+                      <button
+                        type="button"
+                        onClick={eliminarPortadaActual}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Mostrar galería actual si existe */}
+                {galeriaActual.length > 0 && (
+                  <div className="mt-4 p-4 border rounded-2xl bg-gray-50">
+                    <p className="font-semibold mb-2">Galería actual:</p>
+                    <div className="grid grid-cols-4 gap-2">
+                      {galeriaActual.map((item, index) => (
+                        <div key={index} className="relative">
+                          {item.tipo === 'video' ? (
+                            <video src={item.url} className="w-full h-20 object-cover rounded" />
+                          ) : (
+                            <img src={item.url} alt={`Galería ${index}`} className="w-full h-20 object-cover rounded" />
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => eliminarDeGaleriaActual(index)}
+                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center hover:bg-red-600"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
             {/* Galería de Fotos/Videos */}
             <div>
@@ -959,9 +1000,9 @@ const AdminRecuerdos = () => {
                     </p>
                     <p className="text-xs text-gray-500">PNG, JPG, GIF, MP4 hasta 50MB</p>
                   </div>
-                  <input 
-                    type="file" 
-                    className="hidden" 
+                  <input
+                    type="file"
+                    className="hidden"
                     multiple
                     accept="image/*,video/*"
                     onChange={manejarSeleccionGaleria}
@@ -979,7 +1020,7 @@ const AdminRecuerdos = () => {
                 </div>
               )}
             </div>
-            
+
             {/* Botones de acción */}
             <div className="flex flex-col sm:flex-row gap-4 pt-6">
               <button
@@ -999,7 +1040,7 @@ const AdminRecuerdos = () => {
                   </>
                 )}
               </button>
-              
+
               <button
                 type="button"
                 onClick={() => setVista('lista')}

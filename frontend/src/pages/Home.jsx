@@ -17,6 +17,12 @@ import Obra6 from '../assets/obra6.jpg'
 import Obra7 from '../assets/obra7.jpg'
 import Obra8 from '../assets/obra8.jpg'
 
+import students from '../assets/svgs/entrance-ceremony-elementary-school-students-svgrepo-com.svg'
+import pencilcase from '../assets/svgs/pencil-case-svgrepo-com.svg'
+import nomoney from '../assets/svgs/no-money-poverty-budget-poor-cash-svgrepo-com.svg'
+import pintando from '../assets/svgs/pintando.png'
+
+
 // Componentes pesados con Lazy Loading
 const VideoSlider = lazy(() => import('../components/VideoSlider'))
 const RealisticBrushStrokes = lazy(() => import('../components/ui/RealisticBrushStrokes'))
@@ -24,30 +30,45 @@ const PaintBrushCursor = lazy(() => import('../components/ui/PaintBrushCursor'))
 const CTAParticles = lazy(() => import('../components/ui/CTAParticles'))
 const SubtleDecorations = lazy(() => import('../components/ui/SubtleDecorations'))
 
+const DecorativeArrow = () => (
+  <svg 
+    width="80" 
+    height="253" 
+    viewBox="0 0 97 253" 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg"
+    className="w-16 md:w-24 h-auto text-gray-400/60" // Ajusta el tamaño aquí si lo ves muy grande
+  >
+    <path d="M8.45841 13.7344C15.4852 5.21795 33.253 -7.87604 48.1097 7.87933C62.9663 23.6347 42.9232 53.1228 31.0446 65.8974C25.1889 69.4459 12.9756 75.4784 10.968 71.2202C8.4584 65.8974 6.95266 54.7196 27.5312 45.1387C40.7482 39.461 69.2904 33.4286 77.7226 54.7196C81.5706 63.9457 82.2398 85.3787 54.1326 97.3017L18.9986 112.738M18.9986 112.738C5.61422 113.274 -13.6258 106.892 16.489 77.0752C26.0254 72.4621 49.1135 63.1296 65.1748 62.7038C74.3766 64.6554 92.0774 74.3074 89.2667 97.3017C89.6013 101.915 83.3441 113.376 55.6384 122.319C49.2808 123.738 35.0599 126.683 29.037 127.109L7.45463 130.303L18.9986 112.738ZM18.9986 112.738C27.7811 110.254 48.5087 106.031 61.1595 109.012C76.9729 112.738 83.2437 109.544 95.7916 130.303C97.9666 140.948 96.3939 162.772 72.7035 164.901C49.0132 167.03 33.7215 162.949 29.037 160.643V140.948M29.037 140.948C46.2694 142.545 83.2437 141.374 93.282 123.915C98.1339 111.496 98.5019 86.1239 61.1595 83.9948C52.125 84.3496 32.8515 85.4852 28.0331 87.1884L29.037 124.98C46.604 126.577 83.5449 134.135 90.7724 151.594C94.6205 161.707 95.892 182.998 70.1939 187.256C60.6576 187.611 39.0753 186.298 29.037 178.208M29.037 140.948V178.208M29.037 140.948C39.9118 143.61 63.8698 150.955 72.7035 159.046C83.411 167.917 99.1042 189.918 76.2169 206.95C69.0228 209.612 49.9165 211.741 31.0446 198.966M29.037 178.208L31.0446 198.966M29.037 178.208C41.0829 186.724 65.6767 207.376 67.6844 221.854C68.5209 230.725 66.2791 249.213 50.6193 252.194C46.604 252.904 36.6661 252.833 29.037 246.871L31.0446 198.966" stroke="#84829A"/>
+  </svg>
+)
+
+
 const Home = () => {
   const [isMobile, setIsMobile] = useState(false)
   const [isTouchDevice, setIsTouchDevice] = useState(false)
   
   const features = [
     {
-      icon: <FaPalette className="text-3xl md:text-4xl text-watercolor-purple" />,
+      icon: <img src={pencilcase} alt="casepencil" className="w-12 h-12 text-purple-500" />,
       title: "Clases Personalizadas",
       description: "Atención individualizada para cada niño según su nivel y intereses"
     },
     {
-      icon: <FaUsers className="text-3xl md:text-4xl text-watercolor-blue" />,
+      icon: <img src={students} alt="students" className="w-12 h-12 text-purple-500" />,
       title: "Grupos Reducidos",
       description: "Máximo 8 alumnos por clase para garantizar la mejor experiencia"
     },
     {
-      icon: <FaStar className="text-3xl md:text-4xl text-watercolor-yellow" />,
+      icon: <img src={nomoney} alt="free" className="w-12 h-12 text-purple-500" />,
       title: "Primera Clase Gratis",
-      description: "Ven a probar sin compromiso y descubre el talento de tu hijo"
+      description: "Ven a probar sin compromiso y descubre el talento de tu hijoㅤㅤㅤㅤㅤ"
     },
     {
-      icon: <FaChild className="text-3xl md:text-4xl text-watercolor-pink" />,
+      icon: <img src={pintando} alt="painting" className="w-12 h-12 text-purple-500" />,
+      title: "Primera Clase Gratis",
       title: "Para todas las edades",
-      description: "De 4 a 13 años, adaptamos las actividades a cada etapa"
+      description: "De 4 a 13 años, adaptamos las actividades a cada etapaㅤㅤㅤㅤ"
     }
   ]
 
@@ -225,14 +246,23 @@ const Home = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {features.map((feature, index) => (
-              <FeatureCard
-                key={index}
-                index={index}
-                icon={feature.icon}
-                title={feature.title}
-                description={feature.description}
-                isMobile={isMobile}
-              />
+              // IMPORTANTE: El div contenedor debe ser 'relative'
+              <div key={index} className="relative group">
+                <FeatureCard
+                  index={index}
+                  icon={feature.icon}
+                  title={feature.title}
+                  description={feature.description}
+                  isMobile={isMobile}
+                />
+                
+                {/* Condición: Solo si es el último (index === features.length - 1) */}
+                {index === features.length - 1 && (
+                  <div className="absolute -bottom-4 -right-12 md:-right-17 -z-10 pointer-events-none hidden md:block">
+                  <DecorativeArrow />
+                </div>
+                )}
+              </div>
             ))}
           </div>
         </div>

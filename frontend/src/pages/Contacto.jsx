@@ -3,6 +3,15 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import RealisticBrushStrokes from '../components/ui/RealisticBrushStrokes';
 
+import clock from '../assets/svgs/time-svgrepo-com.svg'
+import clothes from '../assets/svgs/clothes-shirt-svgrepo-com.svg'
+import paintpalette from  '../assets/svgs/paint-palette-art-svgrepo-com.svg'
+import sandclock from '../assets/svgs/sand-clock-svgrepo-com.svg'
+import stars from '../assets/svgs/stars-shine-svgrepo-com.svg'
+import payment from '../assets/svgs/payment-method-credit-card-svgrepo-com.svg' 
+import nomoney from '../assets/svgs/no-money-poverty-budget-poor-cash-svgrepo-com.svg'
+
+
 // === SVG Icons === //
 const MapMarkerIcon = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
@@ -19,48 +28,6 @@ const WhatsAppIcon = ({ className = "w-5 h-5" }) => (
 const InstagramIcon = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
     <path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8A5.8 5.8 0 0 1 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2zm8.6 2H7.6A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4zm.85 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" />
-  </svg>
-);
-
-const ClockIcon = ({ className = "w-5 h-5" }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm.5 5H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
-  </svg>
-);
-
-const CheckIcon = ({ className = "w-5 h-5" }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M9 16.2l-3.5-3.5 1.41-1.42L9 13.38l8.09-8.09 1.41 1.41z" />
-  </svg>
-);
-
-const PaymentIcon = ({ className = "w-5 h-5" }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M3 6h18v12H3V6zm2 2v8h14V8H5zm2 2h6v2H7v-2z" />
-  </svg>
-);
-
-const TimeIcon = ({ className = "w-5 h-5" }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 11h4v-2h-3V7h-2v6z" />
-  </svg>
-);
-
-const BrushIcon = ({ className = "w-5 h-5" }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M7 16c-1.1 0-2 .9-2 2s.9 2 2 2c.74 0 1.38-.4 1.73-1H19V4H5v12h2V6h10v10H7zm12 2H8.73A2.006 2.006 0 0 1 7 20c-1.1 0-2-.9-2-2s.9-2 2-2h12v2z" />
-  </svg>
-);
-
-const ShirtIcon = ({ className = "w-5 h-5" }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M16 3H8l-4 4v14h16V7l-4-4zM8.83 5h6.34l2 2H6.83l2-2zM18 19H6V9h12v10z" />
-  </svg>
-);
-
-const StarIcon = ({ className = "w-5 h-5" }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21z" />
   </svg>
 );
 
@@ -98,7 +65,7 @@ const Contacto = () => {
     },
     {
       id: 3,
-      icon: <ClockIcon className="w-6 h-6 text-purple-500" />,
+      icon: <img src={clock} alt="Horario" className="w-6 h-6 text-purple-500" />,
       title: "Horarios",
       content: "Viernes: 15-17h\nSábados: 9-11h y 15-17h",
       description: "Turnos disponibles para todas las edades",
@@ -110,24 +77,24 @@ const Contacto = () => {
 
   const importantInfo = [
     {
-      icon: <CheckIcon className="w-5 h-5 text-green-500" />,
+      icon: <img src={nomoney} alt="Horario" className="w-5 h-5 text-purple-500" />,
       text: "Primera clase GRATIS – Ven a probar sin compromiso",
       highlight: true
     },
     {
-      icon: <PaymentIcon className="w-5 h-5 text-yellow-500" />,
+      icon: <img src={payment} alt="Horario" className="w-5 h-5 text-purple-500" />,
       text: "Medios de pago: Efectivo, Mercado Pago o transferencia"
     },
     {
-      icon: <TimeIcon className="w-5 h-5 text-purple-500" />,
+      icon: <img src={sandclock} alt="Horario" className="w-5 h-5 text-purple-500" />,
       text: "Puntualidad: Tolerancia de 10-15 minutos"
     },
     {
-      icon: <BrushIcon className="w-5 h-5 text-pink-500" />,
+      icon: <img src={paintpalette} alt="Horario" className="w-5 h-5 text-purple-500" />,
       text: "Trae: Materiales propios y trabajos anteriores (opcional)"
     },
     {
-      icon: <ShirtIcon className="w-5 h-5 text-orange-500" />,
+      icon: <img src={clothes} alt="Horario" className="w-5 h-5 text-purple-500" />,
       text: "Ropa: Que se pueda manchar (recomendado)"
     }
   ];
@@ -311,7 +278,7 @@ const Contacto = () => {
                 className="bg-white rounded-xl md:rounded-2xl shadow-lg p-4 md:p-6 border border-gray-100/50"
               >
                 <h3 className="font-bold text-gray-800 mb-3 md:mb-4 text-lg md:text-xl flex items-center gap-2">
-                  <StarIcon className="w-4 h-4 md:w-5 md:h-5 text-yellow-500" /> 
+                 <img src={stars} alt="Horario" className="w-6 h-6 text-purple-500" />
                   Información Importante
                 </h3>
                 <div className="space-y-2 md:space-y-3">

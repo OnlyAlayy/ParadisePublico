@@ -19,9 +19,6 @@ const WhatsAppIcon = ({ className = "w-5 h-5" }) => (
   </svg>
 )
 
-
-
-
 const MapMarkerIcon = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
     <path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z"/>
@@ -39,16 +36,17 @@ const Footer = () => {
     <footer className="bg-gray-800 text-white py-12">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          
           {/* Logo y descripción */}
           <div className="md:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
-                            <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                              <img 
-                                src={logo} 
-                                alt="Logo Taller Paradise" 
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
+              <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                <img 
+                  src={logo} 
+                  alt="Logo Taller Paradise" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
               <div>
                 <h3 className="text-xl font-bold">Taller Paradise</h3>
                 <p className="text-gray-400">Dibujo y Pintura</p>
@@ -63,58 +61,95 @@ const Footer = () => {
                 href="https://instagram.com/taller_paradise" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-watercolor-pink transition-colors duration-300"
+                className="text-gray-400 hover:text-pink-500 transition-colors duration-300"
               >
                 <InstagramIcon className="w-5 h-5" />
               </a>
               <a 
-                href="https://wa.me/541127542411" 
+                href="https://wa.me/5491127542411" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-watercolor-green transition-colors duration-300"
+                className="text-gray-400 hover:text-green-400 transition-colors duration-300"
               >
                 <WhatsAppIcon className="w-5 h-5" />
               </a>
             </div>
           </div>
 
-          {/* Horarios */}
+          {/* Horarios Actualizados */}
           <div>
             <h4 className="text-lg font-semibold mb-4">Horarios</h4>
             <div className="space-y-2 text-gray-400">
+              {/* Martes */}
+              <div className="flex items-start space-x-2">
+                <ClockIcon className="w-5 h-5 text-watercolor-yellow flex-shrink-0 mt-1" />
+                <div className="flex flex-col">
+                  <span>Martes: 9:00 - 11:00</span>
+                  <span>Martes: 15:00 - 17:00</span>
+                </div>
+              </div>
+              
+              {/* Miércoles */}
               <div className="flex items-center space-x-2">
-                <ClockIcon className="w-5 h-5 text-watercolor-yellow" />
+                <ClockIcon className="w-5 h-5 text-watercolor-yellow flex-shrink-0" />
+                <span>Miércoles: 15:00 - 17:00</span>
+              </div>
+
+              {/* Viernes */}
+              <div className="flex items-center space-x-2">
+                <ClockIcon className="w-5 h-5 text-watercolor-yellow flex-shrink-0" />
                 <span>Viernes: 15:00 - 17:00</span>
               </div>
+
+              {/* Sábados */}
               <div className="flex items-center space-x-2">
-                <ClockIcon className="w-5 h-5 text-watercolor-yellow" />
+                <ClockIcon className="w-5 h-5 text-watercolor-yellow flex-shrink-0" />
                 <span>Sábados: 9:00 - 11:00</span>
               </div>
               <div className="flex items-center space-x-2 text-gray-500">
-                <ClockIcon className="w-5 h-5 text-gray-500" />
-                <span>Sábados: 15:00 - 17:00 (Cupo lleno)</span>
+                <ClockIcon className="w-5 h-5 text-gray-500 flex-shrink-0" />
+                <span>Sábados: 15:00 - 17:00 (Lleno)</span>
               </div>
             </div>
           </div>
 
-          {/* Contacto */}
+          {/* Contacto Interactivo */}
           <div>
             <h4 className="text-lg font-semibold mb-4">Contacto</h4>
-            <div className="space-y-2 text-gray-400">
-              <div className="flex items-center space-x-2">
-                <MapMarkerIcon className="w-5 h-5 text-watercolor-red" />
-                <span>Bermejo 3867</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <WhatsAppIcon className="w-5 h-5 text-watercolor-green" />
-                <span>11 2754 2411</span>
-              </div>
+            <div className="space-y-3 text-gray-400">
+              
+              {/* Dirección - Link a Google Maps */}
+              <a 
+                href="https://www.google.com/maps/search/?api=1&query=Bermejo+3867"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 hover:text-white transition-colors duration-200 group"
+              >
+                <MapMarkerIcon className="w-5 h-5 text-watercolor-red group-hover:scale-110 transition-transform" />
+                <span className="border-b border-transparent group-hover:border-gray-400">
+                  Bermejo 3867
+                </span>
+              </a>
+
+              {/* WhatsApp - Link a la API de WhatsApp */}
+              <a 
+                href="https://wa.me/5491127542411"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 hover:text-white transition-colors duration-200 group"
+              >
+                <WhatsAppIcon className="w-5 h-5 text-watercolor-green group-hover:scale-110 transition-transform" />
+                <span className="border-b border-transparent group-hover:border-gray-400">
+                  11 2754 2411
+                </span>
+              </a>
+
             </div>
           </div>
         </div>
 
         <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; 2024 Taller Paradise. Todos los derechos reservados.</p>
+          <p>&copy; {new Date().getFullYear()} Taller Paradise. Todos los derechos reservados.</p>
         </div>
       </div>
     </footer>

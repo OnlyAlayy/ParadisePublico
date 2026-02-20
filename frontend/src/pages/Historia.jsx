@@ -1,20 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion'
 import PaintBrushCursor from '../components/ui/PaintBrushCursor'
 import RealisticBrushStrokes from '../components/ui/RealisticBrushStrokes'
 
 // ========== TUS IMÁGENES ==========
-import Obra1 from '../assets/obra1.jpg'
-import Obra2 from '../assets/obra2.jpg'
-import Obra3 from '../assets/obra3.jpg'
-import Obra4 from '../assets/obra4.jpg'
-
-// ========== ICONOS ==========
-const StarIcon = ({ className = "" }) => (
-  <svg className={`w-6 h-6 ${className}`} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.46,13.97L5.82,21L12,17.27Z" />
-  </svg>
-)
+import Obra1 from '../assets/historia/elinicio.png'
+import Obra2 from '../assets/historia/sueñocompartido.png'
+import Obra3 from '../assets/historia/nuestrafilosofia.png'
+import Obra4 from '../assets/historia/nuestrapromesa.mp4'
+import Obra5 from '../assets/historia/nuestrapromesa2.mp4'
+import Obra6 from '../assets/historia/nuestrapromesa3.mp4'
 
 const ScrollDownIcon = ({ className = "" }) => (
   <svg className={`w-6 h-6 ${className}`} viewBox="0 0 24 24" fill="currentColor">
@@ -39,52 +34,67 @@ const slideInRight = {
 }
 
 // ========== HILO MÁGICO (CON DESVANECIMIENTO FINAL) ==========
+// ========== HILO MÁGICO (CON MULTIPLICADOR RESPONSIVO) ==========
 const MagicThread = ({ scrollYProgress, height }) => {
-  
-  // 1. FÍSICA "FLUIDA RÁPIDA"
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 400, 
-    damping: 30,    
-    mass: 0.1,      
-    restDelta: 0.001
-  });
-
-  // 2. LA MAGIA DEL 150% (1.5)
-  const pathLength = useTransform(smoothProgress, [0, 1], [0, 1.6]); 
-  const offsetDistance = useTransform(smoothProgress, [0, 1], ["0%", "160%"]);
-  
-  // 🔥 FADE OUT FINAL (CONTROL DE OPACIDAD) 🔥
-  // [0, 0.02] -> Fade In inicial
-  // [0.02, 0.85] -> Visible (Opacidad 1)
-  // [0.85, 0.95] -> Fade Out final (Opacidad 1 a 0) antes de llegar al tope
-  const pathOpacity = useTransform(
-    smoothProgress, 
-    [0, 0.02, 0.85, 0.85], 
-    [0, 1, 1, 0]
+  const [screenWidth, setScreenWidth] = useState(
+    typeof window !== 'undefined' ? window.innerWidth : 1200
   );
 
-  // El punto final también debe desaparecer
-  const endPointScale = useTransform(smoothProgress, [0.90, 1], [0, 1]); // Aparece al final, pero si la opacidad es 0, no se verá.
+  useEffect(() => {
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // 1. EL MULTIPLICADOR MÁGICO SEGÚN DISPOSITIVO 
+  // Baja este número si quieres que el trazo se dibuje MENOS (termine antes)
+  let magicMultiplier = 2; // 💻 PC
+  
+  if (screenWidth < 768) {
+    magicMultiplier = 1.15;  // 📱 CELULAR (Aunque no se verá por el CSS, la lógica queda por si acaso)
+  } else if (screenWidth < 1024) {
+    magicMultiplier = 1.35;  // 💊 TABLET
+  }
+
+  // 2. FÍSICA FLUIDA
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 400, damping: 30, mass: 0.1, restDelta: 0.001
+  });
+
+  // 3. APLICAMOS TU MULTIPLICADOR MÁGICO
+  const pathLength = useTransform(smoothProgress, [0, 1], [0, magicMultiplier]); 
+  const offsetDistance = useTransform(smoothProgress, [0, 1], ["0%", `${magicMultiplier * 100}%`]);
+  
+  // Desvanece suavemente en el último 10% del scroll
+  const pathOpacity = useTransform(
+    smoothProgress, 
+    [0, 0.05, 0.90, 1], 
+    [0, 1, 1, 0]
+  );
+  const endPointScale = useTransform(smoothProgress, [0.85, 0.95], [0, 1]); 
 
   const h = height;
   
-  // 3. CAMINO CURVO Y AMPLIO (Tu favorito)
+  // 4. TU CAMINO CURVO Y AMPLIO
+  // MODIFICA LA ÚLTIMA LÍNEA PARA ACORTAR EL FINAL FÍSICO
   const pathDefinition = `
     M 100 0
-    C 100 ${h * 0.05}, 95 ${h * 0.10}, 30 ${h * 0.18}
-    C 20 ${h * 0.40}, 80 ${h * 0.30}, 80 ${h * 0.41}
+    C 100 ${h * 0.10}, 30 ${h * 0.15}, 25 ${h * 0.19}
+    C 10 ${h * 0.40}, 80 ${h * 0.30}, 80 ${h * 0.41}
     C 80 ${h * 0.50}, -10 ${h * 0.55}, 20 ${h * 0.60}
     C 55 ${h * 0.75}, 80 ${h * 0.65}, 80 ${h * 0.80}
-    C 80 ${h * 0.96}, 50 ${h * 0.98}, 50 ${h}
+    C 80 ${h * 0.80}, 80 ${h * 0.78}, 80 ${h * 0.80}
   `;
+  // Fíjate arriba: cambié el "50 ${h}" del final por "50 ${h * 0.95}".
 
   return (
-    <div className="absolute inset-0 pointer-events-none z-0 overflow-visible hidden md:block">
+    // IMPORTANTE: Aquí agregué "hidden md:block" para ocultarlo en celular
+    <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden hidden md:block">
       <svg
         viewBox={`0 0 100 ${height}`}
         className="w-full h-full"
         preserveAspectRatio="none"
-        style={{ overflow: 'visible' }}
+        style={{ overflow: 'hidden' }}
       >
         <defs>
           <linearGradient id="magicGradient" x1="0%" y1="0%" x2="0%" y2="100%" gradientUnits="userSpaceOnUse">
@@ -102,80 +112,25 @@ const MagicThread = ({ scrollYProgress, height }) => {
           </filter>
         </defs>
 
-        {/* Guía de Fondo (Desvanece junto con el hilo) */}
-        <motion.path
-          d={pathDefinition}
-          fill="none"
-          stroke="rgba(139, 92, 246, 0.1)"
-          strokeWidth="3"
-          strokeDasharray="10 15"
-          strokeLinecap="round"
-          vectorEffect="non-scaling-stroke"
-          style={{ opacity: pathOpacity }}
-        />
-
-        {/* El Hilo (Desvanece) */}
-        <motion.path
-          d={pathDefinition}
-          fill="none"
-          stroke="url(#magicGradient)"
-          strokeWidth="6"
-          strokeLinecap="round"
-          filter="url(#neonGlow)"
-          style={{
-            pathLength: pathLength,
-            opacity: pathOpacity
-          }}
-          vectorEffect="non-scaling-stroke"
-        />
-
-        {/* Núcleo (Desvanece) */}
-        <motion.path
-          d={pathDefinition}
-          fill="none"
-          stroke="rgba(255,255,255,0.9)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          style={{
-            pathLength: pathLength,
-            opacity: pathOpacity
-          }}
-          vectorEffect="non-scaling-stroke"
-        />
+        <motion.path d={pathDefinition} fill="none" stroke="rgba(139, 92, 246, 0.1)" strokeWidth="3" strokeDasharray="10 15" strokeLinecap="round" vectorEffect="non-scaling-stroke" style={{ opacity: pathOpacity }} />
+        <motion.path d={pathDefinition} fill="none" stroke="url(#magicGradient)" strokeWidth="6" strokeLinecap="round" filter="url(#neonGlow)" style={{ pathLength: pathLength, opacity: pathOpacity }} vectorEffect="non-scaling-stroke" />
+        <motion.path d={pathDefinition} fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="2" strokeLinecap="round" style={{ pathLength: pathLength, opacity: pathOpacity }} vectorEffect="non-scaling-stroke" />
       </svg>
 
-      {/* Punta del Pincel (Desvanece) */}
-      <motion.div
-        className="absolute top-0 left-0 w-10 h-10 -ml-5 -mt-5"
-        style={{
-            offsetPath: `path("${pathDefinition}")`,
-            offsetDistance: offsetDistance,
-            opacity: pathOpacity,
-            zIndex: 10
-        }}
-      >
+      <motion.div className="absolute top-0 left-0 w-10 h-10 -ml-5 -mt-5" style={{ offsetPath: `path("${pathDefinition}")`, offsetDistance: offsetDistance, opacity: pathOpacity, zIndex: 10 }}>
         <div className="relative w-full h-full">
             <div className="absolute inset-0 bg-white rounded-full shadow-[0_0_20px_rgba(168,85,247,1)]" />
             <div className="absolute -inset-3 bg-gradient-to-t from-blue-500 to-pink-500 rounded-full blur-md opacity-60 animate-pulse" />
         </div>
       </motion.div>
 
-      {/* Punto final fijo (También obedece a la opacidad general para desaparecer) */}
-      <motion.div 
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-6 z-20"
-        style={{ 
-            scale: endPointScale,
-            opacity: pathOpacity // Se desvanece al final también
-        }} 
-      >
+      <motion.div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-6 z-20" style={{ scale: endPointScale, opacity: pathOpacity }} >
          <div className="absolute inset-0 bg-pink-500 rounded-full animate-ping opacity-75" />
          <div className="relative bg-white rounded-full w-full h-full border-4 border-pink-500 shadow-[0_0_15px_rgba(236,72,153,0.8)]" />
       </motion.div>
-
     </div>
   );
 };
-
 // ... FloatingParticles se mantiene igual ...
 const FloatingParticles = () => {
     const particles = Array.from({ length: 20 }).map((_, i) => ({
@@ -306,7 +261,6 @@ const Historia = () => {
                 whileHover={{ scale: 1.05 }}
                 className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-md px-5 py-2 rounded-full shadow-lg border border-white/50"
             >
-              <StarIcon className="text-yellow-500 w-5 h-5 drop-shadow-sm" />
               <span className="text-sm font-bold text-purple-900 tracking-wide">Desde 2024</span>
             </motion.div>
             <h1 className="text-5xl md:text-7xl font-extrabold text-gray-900 tracking-tight">
@@ -353,7 +307,8 @@ const Historia = () => {
                 </p>
             </Chapter>
 
-            <Chapter image={Obra4} title="Nuestra Promesa" direction="right">
+{/* FÍJATE EN LA PROP IMAGE: AHORA ES UN ARRAY */}
+            <Chapter image={[Obra4, Obra5, Obra6]} title="Nuestra Promesa" direction="right">
                 <p className="text-gray-700 text-lg leading-relaxed">
                     En <strong>Taller Paradise</strong> no solo enseñamos técnicas.  
                     <strong> Cultivamos la confianza</strong>, la paciencia y la autoexpresión.
@@ -394,8 +349,33 @@ const Historia = () => {
 }
 
 // ========== COMPONENTE DE CAPÍTULO ==========
+// ========== COMPONENTE DE CAPÍTULO ==========
+// ========== COMPONENTE DE CAPÍTULO ==========
+// ========== COMPONENTE DE CAPÍTULO ==========
+// ========== COMPONENTE DE CAPÍTULO ==========
 const Chapter = ({ image, title, children, direction = 'left' }) => {
   const isLeft = direction === 'left'
+  
+  const [currentIndex, setCurrentIndex] = useState(0);
+  // 1. NUEVO ESTADO: Un contador para forzar un video 100% nuevo en cada transición
+  const [uniqueId, setUniqueId] = useState(0); 
+
+  const isArray = Array.isArray(image);
+  const currentMedia = isArray ? image[currentIndex] : image;
+  
+  const isVideo = typeof currentMedia === 'string' && currentMedia.match(/\.(mp4|webm|ogg)$/i);
+
+  const handleVideoEnd = () => {
+    if (isArray && image.length > 1) {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % image.length);
+      // 2. Cada vez que termina, cambiamos el ID único
+      setUniqueId((prev) => prev + 1);
+    }
+  };
+
+  // 3. LA LLAVE MÁGICA: Si es un array, usamos el uniqueId. Si es foto suelta, la ruta.
+  const mediaKey = isArray ? `media-${uniqueId}` : currentMedia;
+
   return (
     <motion.section
       initial="hidden"
@@ -407,16 +387,47 @@ const Chapter = ({ image, title, children, direction = 'left' }) => {
         variants={isLeft ? slideInLeft : slideInRight}
         className={`relative rounded-3xl overflow-hidden shadow-2xl ${isLeft ? 'md:order-1' : 'md:order-2'}`}
       >
-        <div className="aspect-[4/3] relative overflow-hidden">
+        <div className="aspect-[4/3] relative overflow-hidden bg-gray-100">
           <div className="absolute inset-0 bg-gradient-to-tr from-purple-900/20 to-transparent z-10 mix-blend-overlay" />
-          <img
-            src={image}
-            alt={title}
-            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000 ease-out"
-            loading="lazy"
-          />
+          
+          <AnimatePresence>
+            {isVideo ? (
+              <motion.video
+                key={mediaKey} /* <-- USAMOS LA NUEVA LLAVE AQUÍ */
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+                src={currentMedia}
+                className="absolute inset-0 w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000 ease-out"
+                autoPlay
+                loop={!isArray || image.length === 1}
+                muted
+                playsInline
+                onEnded={handleVideoEnd}
+                // 4. DOBLE SEGURIDAD: Obligamos al video a arrancar desde el segundo 0
+                onLoadedMetadata={(e) => {
+                  e.target.currentTime = 0;
+                  e.target.play();
+                }}
+              />
+            ) : (
+              <motion.img
+                key={mediaKey} /* <-- USAMOS LA NUEVA LLAVE AQUÍ TAMBIÉN */
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+                src={currentMedia}
+                alt={title}
+                className="absolute inset-0 w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000 ease-out"
+                loading="lazy"
+              />
+            )}
+          </AnimatePresence>
+
         </div>
-        <div className="absolute inset-0 ring-1 ring-inset ring-white/30 rounded-3xl pointer-events-none" />
+        <div className="absolute inset-0 ring-1 ring-inset ring-white/30 rounded-3xl pointer-events-none z-20" />
       </motion.div>
 
       <motion.div

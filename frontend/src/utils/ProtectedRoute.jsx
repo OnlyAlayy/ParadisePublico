@@ -1,4 +1,3 @@
-// src/utils/ProtectedRoute.jsx - VERSIÓN CON DEBUG
 import React, { useEffect } from "react";
 import { useLocation, Navigate } from "react-router-dom";
 
@@ -7,30 +6,26 @@ const ProtectedRoute = ({ children }) => {
   const params = new URLSearchParams(location.search);
   const urlToken = params.get("token");
 
-  console.log('🔐 DEBUG ProtectedRoute:');
-  console.log('URL Token:', urlToken);
-  console.log('Env Token:', import.meta.env.VITE_ADMIN_TOKEN);
-  console.log('LocalStorage Token:', localStorage.getItem('admin_token'));
+  const URL_TOKEN = import.meta.env.VITE_URL_TOKEN;
 
   useEffect(() => {
-    console.log('🔄 useEffect ejecutándose...');
-    if (urlToken === import.meta.env.VITE_ADMIN_TOKEN) {
-      console.log('✅ Token VÁLIDO - Guardando en localStorage');
+    // Si hay token en la URL y es válido, guardarlo en localStorage
+    if (urlToken && urlToken === URL_TOKEN) {
+      console.log('✅ Token válido, guardando en localStorage');
       localStorage.setItem("admin_token", urlToken);
+      // Limpiar la URL (opcional, pero seguro)
       window.history.replaceState({}, '', '/admin/recuerdos');
-    } else {
-      console.log('❌ Token INVÁLIDO o no coincide');
-      console.log('URL Token:', urlToken);
-      console.log('Expected:', import.meta.env.VITE_ADMIN_TOKEN);
     }
-  }, [urlToken]);
+  }, [urlToken, URL_TOKEN]);
 
+  // Verificar si hay un token válido en localStorage
   const token = localStorage.getItem("admin_token");
-  const isValid = token === import.meta.env.VITE_ADMIN_TOKEN;
-  
-  console.log('🔍 Resultado final - Acceso:', isValid ? 'PERMITIDO' : 'DENEGADO');
-  
-  return isValid ? children : <Navigate to="/" replace />;
+  const isValid = token === URL_TOKEN;
+
+  console.log('🔐 ProtectedRoute - Token válido:', isValid);
+
+  // Si es válido, mostrar el panel; si no, redirigir al panel (que mostrará el login)
+  return isValid ? children : <Navigate to="/admin/recuerdos" replace />;
 };
 
 export default ProtectedRoute;
