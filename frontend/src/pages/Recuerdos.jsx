@@ -147,7 +147,7 @@ const CustomSelect = ({
 );
 
 const Recuerdos = () => {
-  const BACKEND_URL = 'http://localhost:3001';
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
   const [recuerdos, setRecuerdos] = useState([]);
   const [filtroMes, setFiltroMes] = useState('');
   const [filtroAño, setFiltroAño] = useState(new Date().getFullYear());
