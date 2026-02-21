@@ -67,15 +67,20 @@ const authenticateAdmin = (req, res, next) => {
 
 // Configuración de Nodemailer
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false, // true para puerto 465, false para 587
+  service: 'gmail', // Al usar 'service', Nodemailer ya sabe qué host y puerto usar
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
-  },
-  tls: {
-    rejectUnauthorized: false // Ayuda a evitar bloqueos de certificados en la nube
+  }
+  // En la mayoría de los casos con 'service: gmail', no necesitas TLS manual ni puertos.
+});
+
+// ✅ TRUCO PRO: Verifica la conexión al iniciar el servidor
+transporter.verify(function (error, success) {
+  if (error) {
+    console.log("❌ Error en la configuración de Gmail:", error);
+  } else {
+    console.log("📧 Servidor de correo listo para enviar mensajes");
   }
 });
 
