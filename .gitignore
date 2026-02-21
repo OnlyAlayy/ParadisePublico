@@ -1,6 +1,20 @@
+# Dependencias
 node_modules/
+backend/node_modules/
+frontend/node_modules/
 
-# Variables de entorno
+# Contraseñas y variables de entorno (¡MÁXIMA SEGURIDAD!)
 .env
+backend/.env
+frontend/.env
+*.env
 
+# Archivos de construcción generados automáticamente
+dist/
+build/
+.vite/
 frontend/.vite/
+
+# Archivos basura del sistema
+.DS_Store
+npm-debug.log*
