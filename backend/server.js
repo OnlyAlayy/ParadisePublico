@@ -66,21 +66,30 @@ const authenticateAdmin = (req, res, next) => {
 }
 
 // Configuración de Nodemailer
+// Configuración de Nodemailer - MODO SEGURO PARA RENDER
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // Al usar 'service', Nodemailer ya sabe qué host y puerto usar
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true, // true para puerto 465 (SSL)
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
+  },
+  // Estas opciones ayudan a evitar que la conexión se quede "colgada"
+  connectionTimeout: 10000, // 10 segundos
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
+  tls: {
+    rejectUnauthorized: false // Ignora errores de certificados que puedan ocurrir en la red de Render
   }
-  // En la mayoría de los casos con 'service: gmail', no necesitas TLS manual ni puertos.
 });
 
-// ✅ TRUCO PRO: Verifica la conexión al iniciar el servidor
+// ✅ Verificación de conexión (No lo borres, es vital para el log de Render)
 transporter.verify(function (error, success) {
   if (error) {
-    console.log("❌ Error en la configuración de Gmail:", error);
+    console.log("❌ Error en la configuración de Gmail:", error.message);
   } else {
-    console.log("📧 Servidor de correo listo para enviar mensajes");
+    console.log("📧 Servidor de correo listo para enviar mensajes (Puerto 465)");
   }
 });
 
