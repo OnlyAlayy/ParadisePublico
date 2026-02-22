@@ -65,22 +65,21 @@ const authenticateAdmin = (req, res, next) => {
   next()
 }
 
-// Configuración de Nodemailer
-// Configuración de Nodemailer - MODO SEGURO PARA RENDER
+// Configuración de Nodemailer Render
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 465,
-  secure: true, // true para puerto 465 (SSL)
+  port: 587,
+  secure: false, // true para 465, false para 587
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
   },
-  // Estas opciones ayudan a evitar que la conexión se quede "colgada"
-  connectionTimeout: 10000, // 10 segundos
+  requireTLS: true, // Fuerza STARTTLS
+  connectionTimeout: 10000,
   greetingTimeout: 10000,
   socketTimeout: 10000,
   tls: {
-    rejectUnauthorized: false // Ignora errores de certificados que puedan ocurrir en la red de Render
+    rejectUnauthorized: false // Opcional, útil en entornos con proxies
   }
 });
 
