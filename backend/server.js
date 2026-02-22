@@ -69,18 +69,20 @@ const authenticateAdmin = (req, res, next) => {
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
-  secure: false, // true para 465, false para 587
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
   },
-  requireTLS: true, // Fuerza STARTTLS
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
+  // Aumentamos los timeouts a 30 segundos
+  connectionTimeout: 30000, // 30 segundos
+  greetingTimeout: 30000,
+  socketTimeout: 30000,
   tls: {
-    rejectUnauthorized: false // Opcional, útil en entornos con proxies
-  }
+    rejectUnauthorized: false // Ignora errores de certificado
+  },
+  debug: true,     // Habilita logs detallados
+  logger: true     // Muestra información de depuración en consola
 });
 
 // ✅ Verificación de conexión (No lo borres, es vital para el log de Render)
