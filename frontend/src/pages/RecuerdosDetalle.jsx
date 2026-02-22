@@ -103,7 +103,7 @@ const ScrollAnimationWrapper = ({ children, delay = 0 }) => {
 };
 
 const RecuerdoDetalle = () => {
-  const BACKEND_URL = 'http://localhost:3001';
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
   const { id } = useParams();
   const navigate = useNavigate();
   const [recuerdo, setRecuerdo] = useState(null);
