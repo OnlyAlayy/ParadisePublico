@@ -581,7 +581,7 @@ const RecuerdoDetalle = () => {
                     <FacebookIcon 
                       size={50} 
                       round 
-                      className="shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                      className="drop-shadow-[0_6px_10px_rgba(0,0,0,0.15)] transition-all duration-300 hover:scale-110"
                     />
                     <span className="text-xs mt-2 text-gray-600 font-medium">Facebook</span>
                   </FacebookShareButton>
@@ -598,7 +598,7 @@ const RecuerdoDetalle = () => {
                     <TwitterIcon 
                       size={50} 
                       round 
-                      className="shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                      className="drop-shadow-[0_6px_10px_rgba(0,0,0,0.15)] transition-all duration-300 hover:scale-110"
                     />
                     <span className="text-xs mt-2 text-gray-600 font-medium">Twitter</span>
                   </TwitterShareButton>
@@ -615,7 +615,7 @@ const RecuerdoDetalle = () => {
                     <WhatsappIcon 
                       size={50} 
                       round 
-                      className="shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                      className="drop-shadow-[0_6px_10px_rgba(0,0,0,0.15)] transition-all duration-300 hover:scale-110"
                     />
                     <span className="text-xs mt-2 text-gray-600 font-medium">WhatsApp</span>
                   </WhatsappShareButton>
@@ -631,7 +631,7 @@ const RecuerdoDetalle = () => {
                     <TelegramIcon 
                       size={50} 
                       round 
-                      className="shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                      className="drop-shadow-[0_6px_10px_rgba(0,0,0,0.15)] transition-all duration-300 hover:scale-110"
                     />
                     <span className="text-xs mt-2 text-gray-600 font-medium">Telegram</span>
                   </TelegramShareButton>

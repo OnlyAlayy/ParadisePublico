@@ -7,8 +7,8 @@ import capitoliox25 from '../assets/capitoliox25.jpg'
 import acrilicosnormales from '../assets/AcrilicosNormales.jpg'
 import acrilicosfluo from '../assets/AcrilicosFluo.png'
 import caballeteportatil from '../assets/CaballetePortatil.png'
-import kitparadise from '../assets/KitParadise.jpg'
-import giottox12 from '../assets/LapicesGiotto12.png'
+import kitparadise from '../assets/KitParadise.png'
+import giottox12 from '../assets/LapicesGiotto12.jpg'
 import gomafilgo from '../assets/GomaFilgo.png'
 import lapizfilgo from '../assets/LapizFilgo.png'
 import LapizNegroRobertColor from '../assets/LapizNegroRobertColor.png'
@@ -253,7 +253,6 @@ const Productos = () => {
                         }}
                       />
                     </div>
-                  
                   <div className="p-6">
                     <div className="flex items-start justify-between mb-3">
                       <h3 className="text-xl font-bold text-gray-800 leading-tight">
