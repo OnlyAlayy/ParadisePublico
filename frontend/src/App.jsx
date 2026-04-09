@@ -14,7 +14,7 @@ import Recuerdos from './pages/Recuerdos'
 import RecuerdoDetalle from './pages/RecuerdosDetalle'
 import AdminRecuerdos from './pages/AdminRecuerdos'
 import BackgroundAnimation from './components/BackgroundAnimation'
-import ProtectedRoute from './utils/ProtectedRoute'
+
 
 function App() {
   return (
@@ -37,14 +37,10 @@ function App() {
             <Route path="/recuerdos" element={<Recuerdos />} />
             <Route path="/recuerdos/:id" element={<RecuerdoDetalle />} />
             
-            {/* RUTA PROTEGIDA */}
+            {/* RUTA ADMINISTRATIVA (El componente maneja su propia protección y login) */}
             <Route
               path="/admin/recuerdos"
-              element={
-                <ProtectedRoute>
-                  <AdminRecuerdos />
-                </ProtectedRoute>
-              }
+              element={<AdminRecuerdos />}
             />
           </Routes>
         </AnimatePresence>
