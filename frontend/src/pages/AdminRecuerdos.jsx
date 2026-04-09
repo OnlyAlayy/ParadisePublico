@@ -159,6 +159,16 @@ const AdminRecuerdos = () => {
     setVista('formulario');
   };
 
+  const eliminarDeGaleriaExistente = (index) => {
+    if (!recuerdoEditando) return;
+    const nuevaGaleria = [...recuerdoEditando.galeria];
+    nuevaGaleria.splice(index, 1);
+    setRecuerdoEditando({
+      ...recuerdoEditando,
+      galeria: nuevaGaleria
+    });
+  };
+
   if (mostrarLogin) {
     return (
       <AdminLogin
@@ -191,6 +201,7 @@ const AdminRecuerdos = () => {
       setFormData={setFormData}
       modoEdicion={modoEdicion}
       recuerdoEditando={recuerdoEditando}
+      eliminarDeGaleriaExistente={eliminarDeGaleriaExistente}
       setVista={setVista}
       cerrarSesion={cerrarSesion}
       error={error}

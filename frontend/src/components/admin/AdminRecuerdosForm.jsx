@@ -7,6 +7,7 @@ const AdminRecuerdosForm = ({
   setFormData,
   modoEdicion,
   recuerdoEditando,
+  eliminarDeGaleriaExistente,
   setVista,
   cerrarSesion,
   error,
@@ -208,12 +209,20 @@ const AdminRecuerdosForm = ({
                   <p className="text-gray-600 mb-2 font-medium">Imágenes/videos actuales en la galería:</p>
                   <div className="flex flex-wrap gap-3">
                     {recuerdoEditando.galeria.map((media, idx) => (
-                      <div key={idx} className="relative w-20 h-20">
+                      <div key={idx} className="relative w-20 h-20 group">
                         {media.tipo === 'video' ? (
                           <video src={media.url} className="w-full h-full object-cover rounded-lg shadow border" muted />
                         ) : (
                           <img src={media.url} alt={`media ${idx}`} className="w-full h-full object-cover rounded-lg shadow border" />
                         )}
+                        <button
+                          type="button"
+                          onClick={() => eliminarDeGaleriaExistente(idx)}
+                          className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                          title="Eliminar esta imagen"
+                        >
+                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
                       </div>
                     ))}
                   </div>
