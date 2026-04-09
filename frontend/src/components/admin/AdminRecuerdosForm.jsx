@@ -6,6 +6,7 @@ const AdminRecuerdosForm = ({
   formData,
   setFormData,
   modoEdicion,
+  recuerdoEditando,
   setVista,
   cerrarSesion,
   error,
@@ -164,6 +165,14 @@ const AdminRecuerdosForm = ({
               <label className="block text-lg font-semibold text-gray-800 mb-3">
                 Foto de Portada {modoEdicion ? '(Opcional, sobrescribe la actual)' : '*'}
               </label>
+
+              {modoEdicion && !!recuerdoEditando?.fotoPortada && !fotoPortada && (
+                <div className="mb-4 relative w-32 h-32">
+                  <img src={recuerdoEditando.fotoPortada} alt="Portada actual" className="w-full h-full object-cover rounded-xl shadow-md border-2 border-blue-200" />
+                  <span className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full shadow">Actual</span>
+                </div>
+              )}
+
               <div className="flex items-center justify-center w-full">
                 <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-2xl cursor-pointer bg-white/50 hover:bg-gray-100 transition-all duration-300">
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -193,6 +202,25 @@ const AdminRecuerdosForm = ({
               <label className="block text-lg font-semibold text-gray-800 mb-3">
                 Galería de Fotos/Videos (Opcional)
               </label>
+
+              {modoEdicion && recuerdoEditando?.galeria?.length > 0 && (
+                <div className="mb-4">
+                  <p className="text-gray-600 mb-2 font-medium">Imágenes/videos actuales en la galería:</p>
+                  <div className="flex flex-wrap gap-3">
+                    {recuerdoEditando.galeria.map((media, idx) => (
+                      <div key={idx} className="relative w-20 h-20">
+                        {media.tipo === 'video' ? (
+                          <video src={media.url} className="w-full h-full object-cover rounded-lg shadow border" muted />
+                        ) : (
+                          <img src={media.url} alt={`media ${idx}`} className="w-full h-full object-cover rounded-lg shadow border" />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2">Nuevos archivos se sumarán a esta galería.</p>
+                </div>
+              )}
+
               <div className="flex items-center justify-center w-full">
                 <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-2xl cursor-pointer bg-white/50 hover:bg-gray-100 transition-all duration-300">
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">

@@ -190,6 +190,7 @@ const AdminRecuerdos = () => {
       formData={formData}
       setFormData={setFormData}
       modoEdicion={modoEdicion}
+      recuerdoEditando={recuerdoEditando}
       setVista={setVista}
       cerrarSesion={cerrarSesion}
       error={error}
