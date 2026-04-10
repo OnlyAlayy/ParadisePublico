@@ -25,7 +25,7 @@ const VideoSlider = () => {
       setCurrentIndex(prev => (prev + 1) % videos.length)
     }, 9000)
     return () => clearInterval(timer)
-  }, [])
+  }, [videos.length])
 
   const handleVideoLoad = useCallback(() => {
     setIsLoading(false)
@@ -34,17 +34,17 @@ const VideoSlider = () => {
   const handleVideoError = useCallback(() => {
     console.warn('Error cargando video, pasando al siguiente')
     setCurrentIndex(prev => (prev + 1) % videos.length)
-  }, [])
+  }, [videos.length])
 
   return (
-    <div className="relative h-screen w-full overflow-hidden">
+    <div className="relative h-screen w-full overflow-hidden bg-black">
       <AnimatePresence>
         {isLoading && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 flex items-center justify-center z-20 bg-black/10 backdrop-blur-sm"
+            className="absolute inset-0 flex items-center justify-center z-50 bg-black/10 backdrop-blur-sm"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
@@ -54,15 +54,15 @@ const VideoSlider = () => {
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
-                className="w-8 h-8 border-3 border-white/40 border-t-white rounded-full"
+                className="w-8 h-8 border-3 border-white/40 border-t-white rounded-full animate-spin"
               />
               <motion.span
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-white/80 text-sm font-light"
+                className="text-white/80 text-sm font-light animate-pulse"
               >
-                Cargando momentos creativos...
+                Cargando lienzo...
               </motion.span>
             </motion.div>
           </motion.div>
@@ -99,9 +99,9 @@ const VideoSlider = () => {
       </AnimatePresence>
 
       {/* Overlays */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/30" />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/15 to-black/15" />
-      <div className="absolute inset-0 shadow-[inset_0_0_80px_rgba(0,0,0,0.2)]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/30 z-20 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/15 to-black/15 z-20 pointer-events-none" />
+      <div className="absolute inset-0 shadow-[inset_0_0_80px_rgba(0,0,0,0.2)] z-20 pointer-events-none" />
     </div>
   )
 }
