@@ -547,7 +547,6 @@ const Recuerdos = () => {
                 return (
                   <ScrollAnimationWrapper key={recuerdo._id} delay={index * 0.05}>
                     <motion.div
-                      variants={itemVariants}
                       initial={{ opacity: 0, y: 24 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{
