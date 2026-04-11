@@ -108,7 +108,6 @@ const Productos = () => {
       }
       
       if (delta > 0) {
-        setIsCartOpen(true);
         return [...prev, { ...product, quantity: delta }];
       }
       return prev;
@@ -442,7 +441,7 @@ const Productos = () => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setIsCartOpen(true)}
-            className="fixed bottom-6 right-6 z-40 bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-full shadow-2xl flex items-center justify-center border-2 border-white/20"
+            className="fixed bottom-24 right-6 z-40 bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-full shadow-2xl flex items-center justify-center border-2 border-white/20"
           >
             <div className="relative">
               <span className="text-3xl">🛒</span>
@@ -464,7 +463,7 @@ const Productos = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsCartOpen(false)}
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[60]"
             />
             
             {/* Sidebar panel */}
@@ -473,7 +472,7 @@ const Productos = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 bottom-0 w-full sm:w-96 bg-white shadow-2xl z-50 flex flex-col border-l border-gray-100"
+              className="fixed top-0 right-0 bottom-0 w-full sm:w-96 bg-white shadow-2xl z-[70] flex flex-col border-l border-gray-100"
             >
               {/* Sidebar Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-gray-50/50">
