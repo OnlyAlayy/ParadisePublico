@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { FaShoppingCart, FaShoppingBag } from 'react-icons/fa'
 import RealisticBrushStrokes from '../components/ui/RealisticBrushStrokes'
 
 
@@ -441,11 +442,11 @@ const Productos = () => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setIsCartOpen(true)}
-            className="fixed bottom-24 right-6 z-40 bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-full shadow-2xl flex items-center justify-center"
+            className="fixed bottom-24 right-6 z-40 bg-gradient-to-r from-blue-500 to-purple-600 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center"
           >
-            <div className="relative">
-              <span className="text-2xl">🛒</span>
-              <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+            <div className="relative flex items-center justify-center">
+              <FaShoppingCart className="text-2xl" />
+              <span className="absolute -top-4 -right-4 bg-red-500 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
                 {selectedProducts.reduce((acc, p) => acc + p.quantity, 0)}
               </span>
             </div>
@@ -471,13 +472,13 @@ const Productos = () => {
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              transition={{ type: "tween", duration: 0.3, ease: "easeOut" }}
               className="fixed top-0 right-0 bottom-0 w-full sm:w-96 bg-white shadow-2xl z-[70] flex flex-col border-l border-gray-100"
             >
               {/* Sidebar Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-gray-50/50">
-                <h3 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                  <span className="text-3xl">🛍️</span>
+                <h3 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
+                  <FaShoppingBag className="text-purple-500 text-2xl" />
                   Tu Carrito
                 </h3>
                 <button 
