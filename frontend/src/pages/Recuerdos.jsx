@@ -547,6 +547,7 @@ const Recuerdos = () => {
                 return (
                   <ScrollAnimationWrapper key={recuerdo._id} delay={index * 0.05}>
                     <motion.div
+                      variants={itemVariants}
                       initial={{ opacity: 0, y: 24 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{
@@ -554,18 +555,7 @@ const Recuerdos = () => {
                         duration: 0.45,
                         ease: "easeOut"
                       }}
-                      whileHover={{
-                        scale: 1.04,
-                        y: -8,
-                        rotate: 0.5,
-                        transition: { 
-                          duration: 0.3, 
-                          ease: "easeOut",
-                          type: "spring",
-                          stiffness: 300
-                        }
-                      }}
-                      className="group cursor-pointer"
+                      className="group cursor-pointer transition-transform duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-xl rounded-2xl"
                     >
                       <Link to={`/recuerdos/${recuerdo._id}`} className="block h-full">
                         <div
@@ -601,9 +591,8 @@ const Recuerdos = () => {
                                 <motion.div
                                   whileHover={{ scale: 1.05 }}
                                   transition={{ type: "tween", duration: 0.15 }}
-                                  className="bg-gradient-to-r from-watercolor-blue to-watercolor-purple text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg flex items-center gap-1.5 backdrop-blur-sm border border-white/20"
+                                  className="bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg flex items-center justify-center backdrop-blur-sm border border-white/20"
                                 >
-                                  <SvgIcons.star className="w-3 h-3" />
                                   <span>Destacado</span>
                                 </motion.div>
                               )}
