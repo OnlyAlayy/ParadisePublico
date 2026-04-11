@@ -82,25 +82,34 @@ const VideoSlider = () => {
     <div className="relative h-screen w-full overflow-hidden bg-black">
 
       {isMobile ? (
-        /* ====== MOBILE: solo imágenes ====== */
-        SLIDE_SOURCES.map((slide, index) => (
-          <div
-            key={slide.poster}
-            className="absolute inset-0 w-full h-full"
-            style={{
-              opacity: index === currentIndex ? 1 : 0,
-              transition: 'opacity 0.8s ease-in-out',
-              zIndex: index === currentIndex ? 10 : 0
-            }}
-          >
-            <img
-              src={slide.poster}
-              alt={`Paradise arte ${index + 1}`}
-              className="absolute inset-0 w-full h-full object-cover"
-              loading={index === 0 ? 'eager' : 'lazy'}
-            />
-          </div>
-        ))
+        /* ====== MOBILE: imágenes con efecto Ken Burns (zoom lento) ====== */
+        SLIDE_SOURCES.map((slide, index) => {
+          const isActive = index === currentIndex
+          // Alternar dirección del zoom para variedad
+          const kenBurnsStyle = isActive ? {
+            animation: `kenburns-${index % 3} 10s ease-in-out forwards`
+          } : {}
+
+          return (
+            <div
+              key={slide.poster}
+              className="absolute inset-0 w-full h-full"
+              style={{
+                opacity: isActive ? 1 : 0,
+                transition: 'opacity 0.8s ease-in-out',
+                zIndex: isActive ? 10 : 0
+              }}
+            >
+              <img
+                src={slide.poster}
+                alt={`Paradise arte ${index + 1}`}
+                className="absolute inset-0 w-full h-full object-cover"
+                loading={index === 0 ? 'eager' : 'lazy'}
+                style={kenBurnsStyle}
+              />
+            </div>
+          )
+        })
       ) : (
         /* ====== DESKTOP: 5 videos montados permanentemente, solo alternan opacidad ====== */
         SLIDE_SOURCES.map((slide, index) => (

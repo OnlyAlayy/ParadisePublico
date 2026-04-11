@@ -18,6 +18,20 @@
   50% { opacity: 0.7; }
 }
 
+/* Ken Burns - zoom lento para slider mobile */
+@keyframes kenburns-0 {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.15) translate(-2%, -1%); }
+}
+@keyframes kenburns-1 {
+  0% { transform: scale(1.05) translate(1%, 0); }
+  100% { transform: scale(1.15) translate(-1%, 2%); }
+}
+@keyframes kenburns-2 {
+  0% { transform: scale(1) translate(0, 1%); }
+  100% { transform: scale(1.12) translate(2%, -1%); }
+}
+
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
