@@ -441,10 +441,10 @@ const Productos = () => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setIsCartOpen(true)}
-            className="fixed bottom-24 right-6 z-40 bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-full shadow-2xl flex items-center justify-center border-2 border-white/20"
+            className="fixed bottom-24 right-6 z-40 bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-full shadow-2xl flex items-center justify-center"
           >
             <div className="relative">
-              <span className="text-3xl">🛒</span>
+              <span className="text-2xl">🛒</span>
               <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
                 {selectedProducts.reduce((acc, p) => acc + p.quantity, 0)}
               </span>
