@@ -93,20 +93,28 @@ const Productos = () => {
     }
   ]
 
-  const handleToggleProduct = (product) => {
+  const handleUpdateQuantity = (product, delta) => {
     setSelectedProducts(prev => {
-      const isSelected = prev.find(p => p.id === product.id);
-      if (isSelected) {
-        return prev.filter(p => p.id !== product.id);
+      const existing = prev.find(p => p.id === product.id);
+      if (existing) {
+        const newQuantity = existing.quantity + delta;
+        if (newQuantity <= 0) {
+          return prev.filter(p => p.id !== product.id);
+        } else {
+          return prev.map(p => p.id === product.id ? { ...p, quantity: newQuantity } : p);
+        }
       } else {
-        return [...prev, product];
+        if (delta > 0) {
+          return [...prev, { ...product, quantity: delta }];
+        }
+        return prev;
       }
     });
   }
 
   const handleWhatsAppClick = () => {
     const phoneNumber = "5491100000000"; // Reemplázalo por tu número real con código de país
-    const productNames = selectedProducts.map(p => `- ${p.name} (${p.price})`).join('\n');
+    const productNames = selectedProducts.map(p => `- ${p.quantity}x ${p.name} (${p.price} c/u)`).join('\n');
     const message = `¡Hola Taller Paradise! 🎨 Me gustaría pedir los siguientes materiales:\n\n${productNames}\n\n¿Tienen disponibilidad?`;
     
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
@@ -266,29 +274,38 @@ const Productos = () => {
                     <span className="text-2xl font-bold text-purple-600">
                       {product.price}
                     </span>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => handleToggleProduct(product)}
-                      className={`px-6 py-3 rounded-xl font-semibold text-sm hover:shadow-lg transition-all duration-300 shadow-md ${
-                        selectedProducts.find(p => p.id === product.id)
-                          ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' 
-                          : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
-                      }`}
-                    >
-                      {selectedProducts.find(p => p.id === product.id) ? (
-                        <motion.span
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="flex items-center gap-1"
+                    {selectedProducts.find(p => p.id === product.id) ? (
+                      <div className="flex items-center gap-3 bg-gradient-to-r from-green-500 to-green-600 rounded-xl px-3 py-2 shadow-md text-white font-semibold">
+                        <motion.button 
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
+                          onClick={() => handleUpdateQuantity(product, -1)}
                         >
-                          <span>✓</span>
-                          <span>Seleccionado</span>
-                        </motion.span>
-                      ) : (
-                        "Lo quiero"
-                      )}
-                    </motion.button>
+                          -
+                        </motion.button>
+                        <span className="w-4 text-center">
+                          {selectedProducts.find(p => p.id === product.id).quantity}
+                        </span>
+                        <motion.button 
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
+                          onClick={() => handleUpdateQuantity(product, 1)}
+                        >
+                          +
+                        </motion.button>
+                      </div>
+                    ) : (
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => handleUpdateQuantity(product, 1)}
+                        className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-xl font-semibold text-sm hover:shadow-lg transition-all duration-300 shadow-md"
+                      >
+                        Lo quiero
+                      </motion.button>
+                    )}
                   </div>
                 </div>
               </motion.div>
@@ -422,10 +439,10 @@ const Productos = () => {
             <div className="max-w-4xl mx-auto bg-white/95 backdrop-blur-md shadow-2xl rounded-2xl p-4 border border-purple-200 flex flex-col md:flex-row items-center justify-between pointer-events-auto">
               <div className="mb-4 md:mb-0">
                 <p className="text-gray-800 font-bold mb-1">
-                  Has seleccionado {selectedProducts.length} producto{selectedProducts.length !== 1 && 's'}
+                  Has seleccionado {selectedProducts.reduce((acc, p) => acc + p.quantity, 0)} producto{selectedProducts.reduce((acc, p) => acc + p.quantity, 0) !== 1 && 's'}
                 </p>
                 <p className="text-gray-500 text-sm line-clamp-1 max-w-xl">
-                  {selectedProducts.map(p => p.name).join(', ')}
+                  {selectedProducts.map(p => `${p.quantity}x ${p.name}`).join(', ')}
                 </p>
               </div>
               <button
