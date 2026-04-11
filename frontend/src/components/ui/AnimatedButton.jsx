@@ -12,7 +12,7 @@ const AnimatedButton = ({
   const baseClasses = "relative px-8 py-4 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 border backdrop-blur-sm overflow-hidden group"
   
   const variants = {
-    primary: "bg-gradient-to-r from-watercolor-purple to-watercolor-pink text-white border-white/20",
+    primary: "bg-gradient-to-r from-watercolor-blue to-watercolor-purple text-white border-white/20",
     secondary: "bg-gradient-to-br from-white to-white/95 text-watercolor-purple border-2 border-white/90 hover:border-watercolor-purple/50",
     cta: "bg-white text-watercolor-purple border-2 border-white/50"
   }
