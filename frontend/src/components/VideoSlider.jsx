@@ -23,18 +23,14 @@ const SLIDE_SOURCES = [
   }
 ]
 
-const isMobile = typeof window !== 'undefined' && (
-  /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768
-)
-
 const VideoSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const videoRefs = useRef([])
   const blobsAssigned = useRef(false)
 
-  // --- 1) Descargar videos como blobs y asignarlos UNA SOLA VEZ a cada <video> ---
+  // --- 1) Descargar videos como blobs y asignarlos UNA SOLA VEZ ---
   useEffect(() => {
-    if (isMobile || blobsAssigned.current) return
+    if (blobsAssigned.current) return
     blobsAssigned.current = true
 
     const assignBlobs = async () => {
@@ -45,7 +41,6 @@ const VideoSlider = () => {
           const res = await fetch(SLIDE_SOURCES[i].video)
           const blob = await res.blob()
           vid.src = URL.createObjectURL(blob)
-          // El primero lo reproducimos inmediatamente
           if (i === 0) vid.play().catch(() => {})
         } catch {
           vid.src = SLIDE_SOURCES[i].video
@@ -56,9 +51,8 @@ const VideoSlider = () => {
     assignBlobs()
   }, [])
 
-  // --- 2) Play/Pause según el index actual (nunca toca el src) ---
+  // --- 2) Play/Pause según el index actual ---
   useEffect(() => {
-    if (isMobile) return
     videoRefs.current.forEach((vid, i) => {
       if (!vid) return
       if (i === currentIndex) {
@@ -80,59 +74,26 @@ const VideoSlider = () => {
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-black">
-
-      {isMobile ? (
-        /* ====== MOBILE: imágenes con efecto Ken Burns (zoom lento) ====== */
-        SLIDE_SOURCES.map((slide, index) => {
-          const isActive = index === currentIndex
-          // Alternar dirección del zoom para variedad
-          const kenBurnsStyle = isActive ? {
-            animation: `kenburns-${index % 3} 10s ease-in-out forwards`
-          } : {}
-
-          return (
-            <div
-              key={slide.poster}
-              className="absolute inset-0 w-full h-full"
-              style={{
-                opacity: isActive ? 1 : 0,
-                transition: 'opacity 0.8s ease-in-out',
-                zIndex: isActive ? 10 : 0
-              }}
-            >
-              <img
-                src={slide.poster}
-                alt={`Paradise arte ${index + 1}`}
-                className="absolute inset-0 w-full h-full object-cover"
-                loading={index === 0 ? 'eager' : 'lazy'}
-                style={kenBurnsStyle}
-              />
-            </div>
-          )
-        })
-      ) : (
-        /* ====== DESKTOP: 5 videos montados permanentemente, solo alternan opacidad ====== */
-        SLIDE_SOURCES.map((slide, index) => (
-          <div
-            key={slide.video}
-            className="absolute inset-0 w-full h-full"
-            style={{
-              opacity: index === currentIndex ? 1 : 0,
-              transition: 'opacity 0.8s ease-in-out',
-              zIndex: index === currentIndex ? 10 : 0
-            }}
-          >
-            <video
-              ref={el => { videoRefs.current[index] = el }}
-              muted
-              playsInline
-              poster={slide.poster}
-              preload="none"
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-          </div>
-        ))
-      )}
+      {SLIDE_SOURCES.map((slide, index) => (
+        <div
+          key={slide.video}
+          className="absolute inset-0 w-full h-full"
+          style={{
+            opacity: index === currentIndex ? 1 : 0,
+            transition: 'opacity 0.8s ease-in-out',
+            zIndex: index === currentIndex ? 10 : 0
+          }}
+        >
+          <video
+            ref={el => { videoRefs.current[index] = el }}
+            muted
+            playsInline
+            poster={slide.poster}
+            preload="none"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        </div>
+      ))}
 
       {/* ====== OVERLAYS ====== */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/30 z-20 pointer-events-none" />
