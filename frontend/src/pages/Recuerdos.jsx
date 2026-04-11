@@ -600,7 +600,8 @@ const Recuerdos = () => {
                               {recuerdo.destacado && (
                                 <motion.div
                                   whileHover={{ scale: 1.05 }}
-                                  className="bg-gradient-to-r from-watercolor-yellow to-watercolor-orange text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg flex items-center gap-1.5 backdrop-blur-sm border border-yellow-300/30"
+                                  transition={{ type: "tween", duration: 0.15 }}
+                                  className="bg-gradient-to-r from-watercolor-blue to-watercolor-purple text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg flex items-center gap-1.5 backdrop-blur-sm border border-white/20"
                                 >
                                   <SvgIcons.star className="w-3 h-3" />
                                   <span>Destacado</span>
@@ -610,6 +611,7 @@ const Recuerdos = () => {
                               {/* Badge tipo */}
                               <motion.div
                                 whileHover={{ scale: 1.05 }}
+                                transition={{ type: "tween", duration: 0.15 }}
                                 className="bg-white/95 backdrop-blur-lg rounded-full px-4 py-2 text-xs font-semibold text-gray-800 capitalize shadow-lg border border-white/60 flex items-center gap-1.5"
                               >
                                 <IconComponent className={`w-3.5 h-3.5 ${iconColor}`} />
