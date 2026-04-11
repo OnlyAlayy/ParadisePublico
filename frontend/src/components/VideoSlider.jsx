@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 
 const VIDEOS = [
-  "https://assets.mixkit.co/videos/15163/15163-720.mp4",
-  "https://assets.mixkit.co/videos/14280/14280-720.mp4",
-  "https://assets.mixkit.co/videos/906/906-720.mp4",
-  "https://assets.mixkit.co/videos/40323/40323-720.mp4",
-  "https://assets.mixkit.co/videos/9318/9318-720.mp4"
+  "/videos/mixkit-children-painting-with-their-fingers-15163-hd-ready.mp4",
+  "/videos/mixkit-mother-helps-to-paint-her-daughter-with-watercolor-14280-hd-ready.mp4",
+  "/videos/mixkit-orange-paint-on-a-mural-906-hd-ready.mp4",
+  "/videos/mixkit-detail-view-of-a-painting-being-painted-40323-hd-ready.mp4",
+  "/videos/mixkit-painting-with-watercolor-with-a-brush-9318-hd-ready.mp4"
 ]
 
 const VideoSlider = () => {
