@@ -113,7 +113,7 @@ const Home = () => {
           <VideoSlider />
         </Suspense>
         
-        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-black/20 via-black/10 to-transparent">
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-black/20 via-black/10 to-transparent z-30">
           <motion.div
             {...getAnimationProps({
               initial: { opacity: 0, y: 30 },
