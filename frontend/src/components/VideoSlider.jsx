@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const videos = [
+const VIDEOS = [
   "https://assets.mixkit.co/videos/15163/15163-720.mp4",
   "https://assets.mixkit.co/videos/14280/14280-720.mp4",
   "https://assets.mixkit.co/videos/906/906-720.mp4",
@@ -12,63 +12,56 @@ const videos = [
 const VideoSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
-  const [displayIndex, setDisplayIndex] = useState(0) // índice que se muestra visualmente (para la transición)
-  const activeVideoRef = useRef(null)
-  const nextVideoRef = useRef(null)
-  const timerRef = useRef(null)
-  const hasCalledCanPlay = useRef(new Set()) // evita que onCanPlay cuente doble
+  const videoRefs = useRef([])
+  const firstReadyFired = useRef(false)
 
-  const nextIndex = (currentIndex + 1) % videos.length
+  const nextIndex = (currentIndex + 1) % VIDEOS.length
 
-  // --- Preloader: solo espera al PRIMER video ---
-  const handleFirstVideoReady = useCallback(() => {
-    if (!hasCalledCanPlay.current.has(0)) {
-      hasCalledCanPlay.current.add(0)
+  // --- Preloader: solo espera al primer video ---
+  const handleCanPlay = useCallback((index) => {
+    if (index === 0 && !firstReadyFired.current) {
+      firstReadyFired.current = true
       setIsLoading(false)
     }
   }, [])
 
-  // Fallback: si el primer video tarda más de 8s, entrar igual
+  // Fallback: máximo 8s de espera
   useEffect(() => {
     const t = setTimeout(() => setIsLoading(false), 8000)
     return () => clearTimeout(t)
   }, [])
 
-  // --- Reproducción del video activo ---
+  // --- Play/Pause: solo el video actual se reproduce ---
   useEffect(() => {
     if (isLoading) return
 
-    const activeVid = activeVideoRef.current
-    if (activeVid) {
-      // Asegurar que el src coincide con el video actual antes de reproducir
-      activeVid.play().catch(() => {})
-    }
+    videoRefs.current.forEach((vid, i) => {
+      if (!vid) return
+      if (i === currentIndex) {
+        vid.play().catch(() => {})
+      } else {
+        vid.pause()
+      }
+    })
+  }, [currentIndex, isLoading])
 
-    // Pausar el video "next" que se está pre-cargando en segundo plano
-    const nextVid = nextVideoRef.current
-    if (nextVid) {
-      nextVid.pause()
+  // --- Pre-cargar el próximo video cambiando su preload ---
+  useEffect(() => {
+    const nextVid = videoRefs.current[nextIndex]
+    if (nextVid && nextVid.preload !== 'auto') {
+      nextVid.preload = 'auto'
+      nextVid.load()
     }
-  }, [displayIndex, isLoading])
+  }, [nextIndex])
 
-  // --- Rotación automática ---
+  // --- Rotación automática cada 9s ---
   useEffect(() => {
     if (isLoading) return
-
-    timerRef.current = setInterval(() => {
-      setCurrentIndex(prev => {
-        const next = (prev + 1) % videos.length
-        return next
-      })
+    const timer = setInterval(() => {
+      setCurrentIndex(prev => (prev + 1) % VIDEOS.length)
     }, 9000)
-
-    return () => clearInterval(timerRef.current)
+    return () => clearInterval(timer)
   }, [isLoading])
-
-  // Cuando currentIndex cambia, actualizar displayIndex para disparar la animación
-  useEffect(() => {
-    setDisplayIndex(currentIndex)
-  }, [currentIndex])
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-black">
@@ -106,43 +99,39 @@ const VideoSlider = () => {
         )}
       </AnimatePresence>
 
-      {/* ====== VIDEO ACTIVO (visible) ====== */}
-      <AnimatePresence mode="popLayout">
-        <motion.div
-          key={displayIndex}
-          className="absolute inset-0 w-full h-full"
-          initial={{ opacity: 0, scale: 1.05 }}
-          animate={{ opacity: 1, scale: 1, zIndex: 10 }}
-          exit={{ opacity: 0, scale: 1, zIndex: 5 }}
-          transition={{ duration: 1.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-        >
-          <video
-            ref={activeVideoRef}
-            key={`active-${displayIndex}`}
-            src={videos[displayIndex]}
-            muted
-            loop
-            playsInline
-            preload="auto"
-            autoPlay
-            className="absolute inset-0 w-full h-full object-cover"
-            onCanPlay={displayIndex === 0 ? handleFirstVideoReady : undefined}
-          />
-        </motion.div>
-      </AnimatePresence>
+      {/* ====== VIDEOS — Los 5 se montan UNA VEZ y NUNCA se destruyen ====== */}
+      {VIDEOS.map((src, index) => {
+        const isActive = index === currentIndex
+        const isNext = index === nextIndex
 
-      {/* ====== VIDEO SIGUIENTE (oculto, solo pre-carga) ====== */}
-      <div className="absolute inset-0 w-full h-full" style={{ opacity: 0, zIndex: 0, pointerEvents: 'none' }}>
-        <video
-          ref={nextVideoRef}
-          key={`next-${nextIndex}`}
-          src={videos[nextIndex]}
-          muted
-          playsInline
-          preload="auto"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-      </div>
+        return (
+          <motion.div
+            key={src}  /* KEY ESTABLE = nunca se desmonta */
+            className="absolute inset-0 w-full h-full"
+            initial={false}
+            animate={{
+              opacity: isActive ? 1 : 0,
+              scale: isActive ? 1 : 1.05,
+              zIndex: isActive ? 10 : 0
+            }}
+            transition={{
+              duration: 1.5,
+              ease: [0.25, 0.46, 0.45, 0.94]
+            }}
+          >
+            <video
+              ref={el => { videoRefs.current[index] = el }}
+              src={src}
+              muted
+              loop
+              playsInline
+              preload={index === 0 ? 'auto' : 'none'}
+              className="absolute inset-0 w-full h-full object-cover"
+              onCanPlay={() => handleCanPlay(index)}
+            />
+          </motion.div>
+        )
+      })}
 
       {/* ====== OVERLAYS ====== */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/30 z-20 pointer-events-none" />
