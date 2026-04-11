@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 
-const SLIDES = [
+const SLIDE_SOURCES = [
   {
     video: "/videos/mixkit-children-painting-with-their-fingers-15163-hd-ready.mp4",
     poster: "/videos/mixkit-children-painting-with-their-fingers-15163-hd-ready.jpg"
@@ -29,81 +29,101 @@ const isMobile = typeof window !== 'undefined' && (
 
 const VideoSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [fade, setFade] = useState(true)
-  const [blobUrls, setBlobUrls] = useState([])
-  const videoRef = useRef(null)
+  const videoRefs = useRef([])
+  const blobsAssigned = useRef(false)
 
-  // --- Descargar videos 1 sola vez y guardarlos como blob en memoria ---
+  // --- 1) Descargar videos como blobs y asignarlos UNA SOLA VEZ a cada <video> ---
   useEffect(() => {
-    if (isMobile) return
+    if (isMobile || blobsAssigned.current) return
+    blobsAssigned.current = true
 
-    let cancelled = false
-    const fetchBlobs = async () => {
-      const urls = []
-      for (const slide of SLIDES) {
+    const assignBlobs = async () => {
+      for (let i = 0; i < SLIDE_SOURCES.length; i++) {
+        const vid = videoRefs.current[i]
+        if (!vid) continue
         try {
-          const res = await fetch(slide.video)
+          const res = await fetch(SLIDE_SOURCES[i].video)
           const blob = await res.blob()
-          urls.push(URL.createObjectURL(blob))
+          vid.src = URL.createObjectURL(blob)
+          // El primero lo reproducimos inmediatamente
+          if (i === 0) vid.play().catch(() => {})
         } catch {
-          urls.push(slide.video) // fallback a url directa si falla
+          vid.src = SLIDE_SOURCES[i].video
+          if (i === 0) vid.play().catch(() => {})
         }
       }
-      if (!cancelled) setBlobUrls(urls)
     }
-    fetchBlobs()
-
-    return () => { cancelled = true }
+    assignBlobs()
   }, [])
 
-  // --- Reproducir el video del index actual (solo desktop) ---
+  // --- 2) Play/Pause según el index actual (nunca toca el src) ---
   useEffect(() => {
-    if (isMobile || blobUrls.length === 0) return
-    const vid = videoRef.current
-    if (!vid) return
-    vid.src = blobUrls[currentIndex]
-    vid.play().catch(() => {})
-  }, [currentIndex, blobUrls])
+    if (isMobile) return
+    videoRefs.current.forEach((vid, i) => {
+      if (!vid) return
+      if (i === currentIndex) {
+        vid.currentTime = 0
+        vid.play().catch(() => {})
+      } else {
+        vid.pause()
+      }
+    })
+  }, [currentIndex])
 
-  // --- Rotación automática cada 9s ---
+  // --- 3) Rotación automática cada 9s ---
   useEffect(() => {
     const timer = setInterval(() => {
-      setFade(false)
-      setTimeout(() => {
-        setCurrentIndex(prev => (prev + 1) % SLIDES.length)
-        setFade(true)
-      }, 500)
+      setCurrentIndex(prev => (prev + 1) % SLIDE_SOURCES.length)
     }, 9000)
     return () => clearInterval(timer)
   }, [])
 
-  const currentSlide = SLIDES[currentIndex]
-
   return (
     <div className="relative h-screen w-full overflow-hidden bg-black">
-      <div
-        className="absolute inset-0 w-full h-full"
-        style={{
-          opacity: fade ? 1 : 0,
-          transition: 'opacity 0.5s ease-in-out'
-        }}
-      >
-        {isMobile ? (
-          <img
-            src={currentSlide.poster}
-            alt="Paradise taller de arte"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        ) : (
-          <video
-            ref={videoRef}
-            muted
-            playsInline
-            poster={currentSlide.poster}
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        )}
-      </div>
+
+      {isMobile ? (
+        /* ====== MOBILE: solo imágenes ====== */
+        SLIDE_SOURCES.map((slide, index) => (
+          <div
+            key={slide.poster}
+            className="absolute inset-0 w-full h-full"
+            style={{
+              opacity: index === currentIndex ? 1 : 0,
+              transition: 'opacity 0.8s ease-in-out',
+              zIndex: index === currentIndex ? 10 : 0
+            }}
+          >
+            <img
+              src={slide.poster}
+              alt={`Paradise arte ${index + 1}`}
+              className="absolute inset-0 w-full h-full object-cover"
+              loading={index === 0 ? 'eager' : 'lazy'}
+            />
+          </div>
+        ))
+      ) : (
+        /* ====== DESKTOP: 5 videos montados permanentemente, solo alternan opacidad ====== */
+        SLIDE_SOURCES.map((slide, index) => (
+          <div
+            key={slide.video}
+            className="absolute inset-0 w-full h-full"
+            style={{
+              opacity: index === currentIndex ? 1 : 0,
+              transition: 'opacity 0.8s ease-in-out',
+              zIndex: index === currentIndex ? 10 : 0
+            }}
+          >
+            <video
+              ref={el => { videoRefs.current[index] = el }}
+              muted
+              playsInline
+              poster={slide.poster}
+              preload="none"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          </div>
+        ))
+      )}
 
       {/* ====== OVERLAYS ====== */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/30 z-20 pointer-events-none" />
