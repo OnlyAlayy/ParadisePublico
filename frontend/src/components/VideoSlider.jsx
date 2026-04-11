@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 const SLIDES = [
   {
@@ -23,7 +23,6 @@ const SLIDES = [
   }
 ]
 
-// Detectar mobile una sola vez
 const isMobile = typeof window !== 'undefined' && (
   /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768
 )
@@ -31,40 +30,62 @@ const isMobile = typeof window !== 'undefined' && (
 const VideoSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [fade, setFade] = useState(true)
+  const [blobUrls, setBlobUrls] = useState([])
   const videoRef = useRef(null)
+
+  // --- Descargar videos 1 sola vez y guardarlos como blob en memoria ---
+  useEffect(() => {
+    if (isMobile) return
+
+    let cancelled = false
+    const fetchBlobs = async () => {
+      const urls = []
+      for (const slide of SLIDES) {
+        try {
+          const res = await fetch(slide.video)
+          const blob = await res.blob()
+          urls.push(URL.createObjectURL(blob))
+        } catch {
+          urls.push(slide.video) // fallback a url directa si falla
+        }
+      }
+      if (!cancelled) setBlobUrls(urls)
+    }
+    fetchBlobs()
+
+    return () => { cancelled = true }
+  }, [])
+
+  // --- Reproducir el video del index actual (solo desktop) ---
+  useEffect(() => {
+    if (isMobile || blobUrls.length === 0) return
+    const vid = videoRef.current
+    if (!vid) return
+    vid.src = blobUrls[currentIndex]
+    vid.play().catch(() => {})
+  }, [currentIndex, blobUrls])
 
   // --- Rotación automática cada 9s ---
   useEffect(() => {
     const timer = setInterval(() => {
-      setFade(false) // inicia fade out
+      setFade(false)
       setTimeout(() => {
         setCurrentIndex(prev => (prev + 1) % SLIDES.length)
-        setFade(true) // fade in del nuevo
-      }, 600)
+        setFade(true)
+      }, 500)
     }, 9000)
     return () => clearInterval(timer)
   }, [])
-
-  // --- En desktop: reproducir el video cuando cambia el index ---
-  useEffect(() => {
-    if (isMobile) return
-    const vid = videoRef.current
-    if (!vid) return
-    vid.src = SLIDES[currentIndex].video
-    vid.load()
-    vid.play().catch(() => {})
-  }, [currentIndex])
 
   const currentSlide = SLIDES[currentIndex]
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-black">
-      {/* ====== CONTENIDO: 1 solo elemento, video en desktop, imagen en mobile ====== */}
       <div
         className="absolute inset-0 w-full h-full"
         style={{
           opacity: fade ? 1 : 0,
-          transition: 'opacity 0.6s ease-in-out'
+          transition: 'opacity 0.5s ease-in-out'
         }}
       >
         {isMobile ? (
