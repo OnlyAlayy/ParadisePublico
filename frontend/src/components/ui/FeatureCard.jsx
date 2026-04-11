@@ -9,34 +9,20 @@ const FeatureCard = ({
   ...props 
 }) => (
   <motion.div
-    initial={{ opacity: 0, y: 50, scale: 0.95 }}
-    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+    initial={{ opacity: 0, y: 15 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, amount: 0.2 }}
     transition={{ 
-      duration: 0.6, 
-      delay: index * 0.1,
+      duration: 0.35, 
+      delay: index * 0.08,
       ease: "easeOut"
     }}
-    whileHover={{ 
-      scale: 1.03,
-      y: -5,
-      transition: { duration: 0.2, ease: "easeOut" }
-    }}
-    className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 relative group backdrop-blur-sm bg-white/95"
+    className="bg-white p-8 rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 ease-out border border-gray-100 relative group backdrop-blur-sm bg-white/95 hover:-translate-y-1"
     {...props}
   >
-    <motion.div
-      className="relative z-10 mb-6"
-      whileHover={{ 
-        scale: 1.1,
-        rotate: [0, -2, 2, 0],
-      }}
-      transition={{ 
-        duration: 0.4,
-        ease: "easeInOut"
-      }}
-    >
+    <div className="relative z-10 mb-6">
       {icon}
-    </motion.div>
+    </div>
     <h3 className="text-xl font-bold text-gray-800 mb-3 relative z-10 tracking-tight">
       {title}
     </h3>
@@ -44,7 +30,7 @@ const FeatureCard = ({
       {description}
     </p>
 
-    <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-watercolor-blue/5 to-watercolor-purple/5 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-out" />
+    <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-watercolor-blue/5 to-watercolor-purple/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
   </motion.div>
 )
 

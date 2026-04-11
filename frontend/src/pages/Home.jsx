@@ -79,16 +79,16 @@ const Home = () => {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  // Animaciones optimizadas para móvil
+  // Animaciones optimizadas — rápidas y suaves
   const getAnimationProps = (baseProps = {}) => {
     if (isMobile) {
       return {
-        initial: { opacity: 0, y: 20 },
+        initial: { opacity: 0, y: 10 },
         animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.4 }
+        transition: { duration: 0.3 }
       }
     }
-    return baseProps
+    return { ...baseProps, viewport: { once: true, amount: 0.2 } }
   }
 
   // Fallback simple para loading
@@ -193,18 +193,18 @@ const Home = () => {
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             {...getAnimationProps({
-              initial: { opacity: 0, y: 40 },
+              initial: { opacity: 0, y: 15 },
               whileInView: { opacity: 1, y: 0 },
-              transition: { duration: 0.7, ease: "easeOut" }
+              transition: { duration: 0.4, ease: "easeOut" }
             })}
             className="text-center mb-12 md:mb-16"
           >
             <motion.h2
               className="text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 tracking-tight"
               {...getAnimationProps({
-                initial: { opacity: 0, scale: isMobile ? 1 : 0.95 },
-                whileInView: { opacity: 1, scale: 1 },
-                transition: { duration: 0.6, ease: "easeOut" }
+                initial: { opacity: 0 },
+                whileInView: { opacity: 1 },
+                transition: { duration: 0.35, ease: "easeOut" }
               })}
             >
               <span className="bg-gradient-to-r from-watercolor-blue via-watercolor-purple to-watercolor-pink bg-clip-text text-transparent drop-shadow-sm">
@@ -216,7 +216,7 @@ const Home = () => {
               {...getAnimationProps({
                 initial: { opacity: 0 },
                 whileInView: { opacity: 1 },
-                transition: { duration: 0.6, delay: 0.2, ease: "easeOut" }
+                transition: { duration: 0.35, delay: 0.1, ease: "easeOut" }
               })}
             >
               Un espacio donde la creatividad florece y los niños descubren el maravilloso mundo del arte
@@ -250,18 +250,18 @@ const Home = () => {
           <div className="container mx-auto px-4 relative z-10">
             <motion.div
               {...getAnimationProps({
-                initial: { opacity: 0, y: 30 },
+                initial: { opacity: 0, y: 15 },
                 whileInView: { opacity: 1, y: 0 },
-                transition: { duration: 0.8, ease: "easeOut" }
+                transition: { duration: 0.4, ease: "easeOut" }
               })}
               className="text-center mb-12 md:mb-16"
             >
               <motion.h2
                 className="text-2xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-watercolor-blue via-watercolor-purple to-watercolor-pink bg-clip-text text-transparent mb-4 md:mb-6 tracking-tight drop-shadow-sm"
                 {...getAnimationProps({
-                  initial: { opacity: 0, scale: isMobile ? 1 : 0.95 },
-                  whileInView: { opacity: 1, scale: 1 },
-                  transition: { duration: 0.6, delay: 0.2, ease: "easeOut" }
+                  initial: { opacity: 0 },
+                  whileInView: { opacity: 1 },
+                  transition: { duration: 0.35, ease: "easeOut" }
                 })}
               >
                 Nuestras Creaciones
@@ -269,9 +269,9 @@ const Home = () => {
               <motion.p
                 className="text-base md:text-xl text-gray-700 max-w-2xl mx-auto leading-relaxed font-light"
                 {...getAnimationProps({
-                  initial: { opacity: 0, y: 20 },
-                  whileInView: { opacity: 1, y: 0 },
-                  transition: { duration: 0.6, delay: 0.4, ease: "easeOut" }
+                  initial: { opacity: 0 },
+                  whileInView: { opacity: 1 },
+                  transition: { duration: 0.35, delay: 0.1, ease: "easeOut" }
                 })}
               >
                 Descubre las maravillosas obras de arte creadas por nuestros pequeños artistas
@@ -303,9 +303,9 @@ const Home = () => {
             {/* CTA para ver más creaciones */}
             <motion.div
               {...getAnimationProps({
-                initial: { opacity: 0, y: 20 },
+                initial: { opacity: 0, y: 10 },
                 whileInView: { opacity: 1, y: 0 },
-                transition: { duration: 0.7, delay: 0.8, ease: "easeOut" }
+                transition: { duration: 0.35, delay: 0.2, ease: "easeOut" }
               })}
               className="text-center mt-12 md:mt-16"
             >
@@ -327,9 +327,9 @@ const Home = () => {
               {/* Cita inspiradora - Simplificada en móvil */}
               <motion.div
                 {...getAnimationProps({
-                  initial: { opacity: 0, y: 20 },
+                  initial: { opacity: 0, y: 10 },
                   whileInView: { opacity: 1, y: 0 },
-                  transition: { duration: 0.7, delay: 1, ease: "easeOut" }
+                  transition: { duration: 0.35, delay: 0.3, ease: "easeOut" }
                 })}
                 className="text-center mt-8 md:mt-12"
               >
@@ -341,7 +341,7 @@ const Home = () => {
                     {...getAnimationProps({
                       initial: { opacity: 0 },
                       whileInView: { opacity: 1 },
-                      transition: { duration: 0.8, delay: 1.2 }
+                      transition: { duration: 0.4, delay: 0.35 }
                     })}
                   >
                     "Cada obra de arte cuenta una historia única de imaginación y creatividad"
@@ -384,17 +384,17 @@ const Home = () => {
         <div className="container mx-auto px-4 text-center relative z-10">
           <motion.div
             {...getAnimationProps({
-              initial: { opacity: 0, scale: isMobile ? 1 : 0.98 },
-              whileInView: { opacity: 1, scale: 1 },
-              transition: { duration: 0.8, ease: "easeOut" }
+              initial: { opacity: 0 },
+              whileInView: { opacity: 1 },
+              transition: { duration: 0.4, ease: "easeOut" }
             })}
           >
             <motion.h2
               className="text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-4 md:mb-6 tracking-tight drop-shadow-lg"
               {...getAnimationProps({
-                initial: { opacity: 0, y: 30 },
+                initial: { opacity: 0, y: 15 },
                 whileInView: { opacity: 1, y: 0 },
-                transition: { duration: 0.6, ease: "easeOut" }
+                transition: { duration: 0.35, ease: "easeOut" }
               })}
             >
               ¿Listo para comenzar?
@@ -402,18 +402,18 @@ const Home = () => {
             <motion.p
               className="text-base md:text-xl text-white/95 mb-6 md:mb-8 max-w-2xl mx-auto leading-relaxed font-light"
               {...getAnimationProps({
-                initial: { opacity: 0, y: 30 },
+                initial: { opacity: 0, y: 15 },
                 whileInView: { opacity: 1, y: 0 },
-                transition: { duration: 0.6, delay: 0.2, ease: "easeOut" }
+                transition: { duration: 0.35, delay: 0.1, ease: "easeOut" }
               })}
             >
               Inscríbete hoy y recibe tu primera clase totalmente gratis
             </motion.p>
             <motion.div
               {...getAnimationProps({
-                initial: { opacity: 0, y: 30 },
+                initial: { opacity: 0, y: 15 },
                 whileInView: { opacity: 1, y: 0 },
-                transition: { duration: 0.6, delay: 0.4, ease: "easeOut" }
+                transition: { duration: 0.35, delay: 0.15, ease: "easeOut" }
               })}
             >
               <AnimatedButton 

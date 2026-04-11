@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 
 const VIDEOS = [
-  "https://assets.mixkit.co/videos/15163/15163-480.mp4",
-  "https://assets.mixkit.co/videos/14280/14280-480.mp4",
-  "https://assets.mixkit.co/videos/906/906-480.mp4",
-  "https://assets.mixkit.co/videos/40323/40323-480.mp4",
-  "https://assets.mixkit.co/videos/9318/9318-480.mp4"
+  "https://assets.mixkit.co/videos/15163/15163-720.mp4",
+  "https://assets.mixkit.co/videos/14280/14280-720.mp4",
+  "https://assets.mixkit.co/videos/906/906-720.mp4",
+  "https://assets.mixkit.co/videos/40323/40323-720.mp4",
+  "https://assets.mixkit.co/videos/9318/9318-720.mp4"
 ]
 
 const VideoSlider = () => {
