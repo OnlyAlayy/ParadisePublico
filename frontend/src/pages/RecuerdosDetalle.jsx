@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import PaintBrushCursor from '../components/ui/PaintBrushCursor';
+
 import RealisticBrushStrokes from '../components/ui/RealisticBrushStrokes';
 import {
   FacebookShareButton,
@@ -260,8 +260,7 @@ const RecuerdoDetalle = () => {
       exit={{ opacity: 0 }}
       className="min-h-screen bg-gradient-to-br from-watercolor-blue/5 via-watercolor-purple/5 to-watercolor-pink/5 relative overflow-hidden"
     >
-      {/* Cursor personalizado de pincel */}
-      <PaintBrushCursor />
+
 
       {/* Brush strokes de fondo */}
       <RealisticBrushStrokes 

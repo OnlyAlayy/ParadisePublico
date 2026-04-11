@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import PaintBrushCursor from '../components/ui/PaintBrushCursor';
+
 import RealisticBrushStrokes from '../components/ui/RealisticBrushStrokes';
 
 // Componentes SVG mejorados con estilo watercolor y colores vibrantes
@@ -314,8 +314,7 @@ const Recuerdos = () => {
       exit={{ opacity: 0 }}
       className="min-h-screen py-12 bg-gradient-to-br from-watercolor-blue/5 via-watercolor-purple/5 to-watercolor-pink/5 relative overflow-hidden"
     >
-      {/* Cursor personalizado de pincel */}
-      <PaintBrushCursor />
+
 
       {/* Brush strokes de fondo mejorados */}
       <RealisticBrushStrokes 

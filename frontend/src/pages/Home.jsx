@@ -20,7 +20,7 @@ import Obra8 from '../assets/obra8.jpg'
 // Componentes pesados con Lazy Loading
 const VideoSlider = lazy(() => import('../components/VideoSlider'))
 const RealisticBrushStrokes = lazy(() => import('../components/ui/RealisticBrushStrokes'))
-const PaintBrushCursor = lazy(() => import('../components/ui/PaintBrushCursor'))
+
 const CTAParticles = lazy(() => import('../components/ui/CTAParticles'))
 const SubtleDecorations = lazy(() => import('../components/ui/SubtleDecorations'))
 
@@ -99,13 +99,7 @@ const Home = () => {
   )
 
   return (
-    <div className={`relative overflow-hidden ${isTouchDevice ? 'cursor-auto' : 'cursor-none'}`}>
-      {/* Solo cargar cursor en dispositivos no táctiles y no móviles */}
-      {!isTouchDevice && !isMobile && (
-        <Suspense fallback={null}>
-          <PaintBrushCursor />
-        </Suspense>
-      )}
+    <div className="relative overflow-hidden">
       
       {/* Sección Hero - SIEMPRE mostrar VideoSlider */}
       <SectionWrapper ref={heroRef} className="relative min-h-screen">

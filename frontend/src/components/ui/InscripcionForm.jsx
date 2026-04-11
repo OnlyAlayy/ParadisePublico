@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import PaintBrushCursor from './PaintBrushCursor';
+
 import RealisticBrushStrokes from './RealisticBrushStrokes';
 import {
   ChildIcon,
@@ -19,8 +19,7 @@ const InscripcionForm = ({
   handleSubmit
 }) => {
   return (
-    <div className="relative overflow-hidden cursor-none">
-      <PaintBrushCursor />
+    <div className="relative overflow-hidden">
       <RealisticBrushStrokes 
         section="light" 
         intensity="light"

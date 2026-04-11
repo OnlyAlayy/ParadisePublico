@@ -1,13 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import PaintBrushCursor from './PaintBrushCursor';
+
 import RealisticBrushStrokes from './RealisticBrushStrokes';
 import { CheckIcon, PaperPlaneIcon } from './FormIcons';
 
 const InscripcionSuccess = ({ formData, setIsSubmitted, setFormData }) => {
   return (
-    <div className="relative overflow-hidden cursor-none min-h-screen">
-      <PaintBrushCursor />
+    <div className="relative overflow-hidden min-h-screen">
       <RealisticBrushStrokes 
         section="light" 
         intensity="light"

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import RealisticBrushStrokes from '../components/ui/RealisticBrushStrokes'
-import PaintBrushCursor from '../components/ui/PaintBrushCursor.jsx'
+
 
 import capitoliox25 from '../assets/capitoliox25.jpg'
 import acrilicosnormales from '../assets/AcrilicosNormales.jpg'
@@ -162,8 +162,7 @@ const Productos = () => {
 
   return (
     <div className="relative overflow-hidden min-h-screen">
-      {/* Trazos de pincel en el fondo y pincel*/}
-      <PaintBrushCursor />
+
       <RealisticBrushStrokes 
         section="light" 
         intensity="light"

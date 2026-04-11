@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
-import PaintBrushCursor from '../components/ui/PaintBrushCursor'
+
 import RealisticBrushStrokes from '../components/ui/RealisticBrushStrokes'
 
 // ========== TUS IMÁGENES ==========
@@ -253,7 +253,6 @@ const Historia = () => {
     <div ref={containerRef} className="relative w-full min-h-screen bg-gradient-to-br from-indigo-50/40 via-purple-50/30 to-pink-50/40 overflow-hidden">
       
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <PaintBrushCursor />
         <FloatingParticles />
         <RealisticBrushStrokes 
             section="light" 
