@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import RealisticBrushStrokes from '../components/ui/RealisticBrushStrokes'
 
 
@@ -14,7 +14,7 @@ import lapizfilgo from '../assets/LapizFilgo.png'
 import LapizNegroRobertColor from '../assets/LapizNegroRobertColor.png'
 
 const Productos = () => {
-  const [clickedButtons, setClickedButtons] = useState({})
+  const [selectedProducts, setSelectedProducts] = useState([])
 
   const products = [
     {
@@ -93,18 +93,24 @@ const Productos = () => {
     }
   ]
 
-  const handleButtonClick = (productId) => {
-    setClickedButtons(prev => ({
-      ...prev,
-      [productId]: true
-    }))
+  const handleToggleProduct = (product) => {
+    setSelectedProducts(prev => {
+      const isSelected = prev.find(p => p.id === product.id);
+      if (isSelected) {
+        return prev.filter(p => p.id !== product.id);
+      } else {
+        return [...prev, product];
+      }
+    });
+  }
+
+  const handleWhatsAppClick = () => {
+    const phoneNumber = "5491100000000"; // Reemplázalo por tu número real con código de país
+    const productNames = selectedProducts.map(p => `- ${p.name} (${p.price})`).join('\n');
+    const message = `¡Hola Taller Paradise! 🎨 Me gustaría pedir los siguientes materiales:\n\n${productNames}\n\n¿Tienen disponibilidad?`;
     
-    setTimeout(() => {
-      setClickedButtons(prev => ({
-        ...prev,
-        [productId]: false
-      }))
-    }, 2000)
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
   }
 
   // Variantes para las animaciones al hacer scroll
@@ -263,22 +269,24 @@ const Productos = () => {
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => handleButtonClick(product.id)}
-                      className={`bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-xl font-semibold text-sm hover:shadow-lg transition-all duration-300 shadow-md ${
-                        clickedButtons[product.id] ? 'bg-green-500' : ''
+                      onClick={() => handleToggleProduct(product)}
+                      className={`px-6 py-3 rounded-xl font-semibold text-sm hover:shadow-lg transition-all duration-300 shadow-md ${
+                        selectedProducts.find(p => p.id === product.id)
+                          ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' 
+                          : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
                       }`}
                     >
-                      {clickedButtons[product.id] ? (
+                      {selectedProducts.find(p => p.id === product.id) ? (
                         <motion.span
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
                           className="flex items-center gap-1"
                         >
                           <span>✓</span>
-                          <span>Enviado</span>
+                          <span>Seleccionado</span>
                         </motion.span>
                       ) : (
-                        "Quiero este"
+                        "Lo quiero"
                       )}
                     </motion.button>
                   </div>
@@ -401,6 +409,36 @@ const Productos = () => {
           </motion.div>
         </div>
       </motion.div>
+
+      {/* Floating Cart */}
+      <AnimatePresence>
+        {selectedProducts.length > 0 && (
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            className="fixed bottom-0 left-0 right-0 p-4 z-50 pointer-events-none"
+          >
+            <div className="max-w-4xl mx-auto bg-white/95 backdrop-blur-md shadow-2xl rounded-2xl p-4 border border-purple-200 flex flex-col md:flex-row items-center justify-between pointer-events-auto">
+              <div className="mb-4 md:mb-0">
+                <p className="text-gray-800 font-bold mb-1">
+                  Has seleccionado {selectedProducts.length} producto{selectedProducts.length !== 1 && 's'}
+                </p>
+                <p className="text-gray-500 text-sm line-clamp-1 max-w-xl">
+                  {selectedProducts.map(p => p.name).join(', ')}
+                </p>
+              </div>
+              <button
+                onClick={handleWhatsAppClick}
+                className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition-colors w-full md:w-auto flex items-center justify-center gap-2"
+              >
+                <span className="text-xl">💬</span>
+                Pedir por WhatsApp
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
