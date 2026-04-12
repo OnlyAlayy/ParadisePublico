@@ -96,10 +96,10 @@ const Productos = () => {
     },
     {
       id: 10,
-      name: "Maderas Fibrofacil",
+      name: "Madera Fibrofácil (x1)",
       price: "$3.000",
       image: maderasFibroFacil,
-      description: "Cortes de fibrofácil ideales para técnica de puntillismo o pintura",
+      description: "Corte de fibrofácil ideal para técnica de puntillismo o pintura (Precio por unidad)",
       emoji: "🪵"
     }
   ]
