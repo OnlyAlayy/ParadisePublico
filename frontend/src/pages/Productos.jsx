@@ -30,7 +30,7 @@ const Productos = () => {
     {
       id: 2,
       name: "Acrilicos Normales",
-      price: "$3.200",
+      price: "$8.500",
       image: acrilicosnormales,
       description: "Set de acrílicos decorativos x5 Eterna de 50ml con acabado profesional y alta pigmentación.",
       emoji: "✏️"
@@ -38,7 +38,7 @@ const Productos = () => {
     {
       id: 3,
       name: "Acrilicos Fluo",
-      price: "$2.800",
+      price: "$9.000",
       image: acrilicosfluo,
       description: "Set de 5 acrílicos decorativos Eterna de 50ml, colores intensos con alta pigmentación y efecto fluorescente reactivo a la luz UV.",
       emoji: "🖌️"
@@ -72,7 +72,7 @@ const Productos = () => {
     {
       id: 7,
       name: "Goma Filgo",
-      price: "$6.500",
+      price: "$900",
       image: gomafilgo,
       description: "Goma de borrar blanca de calidad para niños",
       emoji: "🧹"
@@ -80,7 +80,7 @@ const Productos = () => {
     {
       id: 8,
       name: "Lapiz Filgo",
-      price: "$6.500",
+      price: "$1.500",
       image: lapizfilgo,
       description: "Lapiz de grafito de calidad para niños",
       emoji: "✏️"
@@ -88,7 +88,7 @@ const Productos = () => {
     {
       id: 9,
       name: "Lapiz Negro Robert Color",
-      price: "$7.500",
+      price: "$1.000",
       image: LapizNegroRobertColor,
       description: "Lapiz negro de calidad para niños",
       emoji: "✏️"
