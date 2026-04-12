@@ -55,7 +55,7 @@ const Productos = () => {
     {
       id: 5,
       name: "Kit Inicial Paradise",
-      price: "$8.900",
+      price: "$11.000",
       image: kitparadise,
       description: "Kit completo ideal para principiantes",
       emoji: "📦",
@@ -65,7 +65,7 @@ const Productos = () => {
     {
       id: 6,
       name: "Lapices de Colores Giotto",
-      price: "$6.500",
+      price: "$7.000",
       image: giottox12,
       description: "Set de 12 lapices de colores Giotto, ideal para niños",
       emoji: "✏️"
@@ -97,7 +97,7 @@ const Productos = () => {
     {
       id: 10,
       name: "Madera Fibrofácil (x1)",
-      price: "$3.000",
+      price: "$1.500",
       image: maderasFibroFacil,
       description: "Corte de fibrofácil ideal para técnica de puntillismo o pintura (Precio por unidad)",
       emoji: "🪵"
