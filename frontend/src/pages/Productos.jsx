@@ -61,7 +61,7 @@ const Productos = () => {
       emoji: "📦",
       featured: true,
       featuredText: "El más elegido por alumnos nuevos",
-      discount: "11% OFF"
+      discount: "Descuento del 11%"
     },
     {
       id: 6,
