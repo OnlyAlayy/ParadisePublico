@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FaShoppingCart, FaShoppingBag } from 'react-icons/fa'
+import { FaShoppingCart, FaShoppingBag, FaTrash } from 'react-icons/fa'
 import RealisticBrushStrokes from '../components/ui/RealisticBrushStrokes'
 
 
@@ -113,6 +113,19 @@ const Productos = () => {
       }
       return prev;
     });
+  }
+
+  const handleRemoveProduct = (productId) => {
+    setSelectedProducts(prev => {
+      const newProducts = prev.filter(p => p.id !== productId);
+      if (newProducts.length === 0) setIsCartOpen(false);
+      return newProducts;
+    });
+  }
+
+  const handleEmptyCart = () => {
+    setSelectedProducts([]);
+    setIsCartOpen(false);
   }
 
   const handleWhatsAppClick = () => {
@@ -481,12 +494,22 @@ const Productos = () => {
                   <FaShoppingBag className="text-purple-500 text-2xl" />
                   Tu Carrito
                 </h3>
-                <button 
-                  onClick={() => setIsCartOpen(false)}
-                  className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 transition-colors text-gray-600 font-bold"
-                >
-                  ✕
-                </button>
+                <div className="flex items-center gap-3">
+                  {selectedProducts.length > 0 && (
+                    <button
+                      onClick={handleEmptyCart}
+                      className="text-sm text-red-500 hover:text-red-700 font-semibold transition-colors decoration-red-500/30 hover:underline underline-offset-4"
+                    >
+                      Vaciar
+                    </button>
+                  )}
+                  <button 
+                    onClick={() => setIsCartOpen(false)}
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 transition-colors text-gray-600 font-bold"
+                  >
+                    ✕
+                  </button>
+                </div>
               </div>
               
               {/* Sidebar Content (Items) */}
@@ -512,7 +535,16 @@ const Productos = () => {
                       </div>
                       
                       <div className="flex items-center justify-between mt-2 pt-3 border-t border-gray-50">
-                        <span className="text-sm text-gray-500">Cantidad:</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-gray-500">Cantidad:</span>
+                          <button
+                            onClick={() => handleRemoveProduct(product.id)}
+                            className="text-red-400 hover:text-red-600 transition-colors ml-2"
+                            title="Eliminar producto"
+                          >
+                            <FaTrash size={14} />
+                          </button>
+                        </div>
                         <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-2 py-1 shadow-sm">
                           <button 
                             className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-600 hover:bg-white hover:shadow-sm font-bold transition-all"
