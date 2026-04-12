@@ -4,7 +4,7 @@ import { FaShoppingCart, FaShoppingBag, FaTrash } from 'react-icons/fa'
 import RealisticBrushStrokes from '../components/ui/RealisticBrushStrokes'
 
 
-import hojasLuma from '../assets/hojasluma.jpg'
+import capitoliox25 from '../assets/capitoliox25.jpg'
 import acrilicosnormales from '../assets/AcrilicosNormales.jpg'
 import acrilicosfluo from '../assets/AcrilicosFluo.png'
 import caballeteportatil from '../assets/CaballetePortatil.png'
@@ -22,10 +22,10 @@ const Productos = () => {
   const products = [
     {
       id: 1,
-      name: "Block de Hojas Luma",
-      price: "$3.000",
-      image: hojasLuma,
-      description: "Block de hojas lisas N°5 Luma, perfecto para dibujo y pintura",
+      name: "Block de Hojas Blancas",
+      price: "$3000",
+      image: capitoliox25,
+      description: "Block de 24 hojas lisas N°5, perfecto para dibujo, acuarela y pintura",
       emoji: "📄"
     },
     {
@@ -57,10 +57,11 @@ const Productos = () => {
       name: "Kit Inicial Paradise",
       price: "$11.000",
       image: kitparadise,
-      description: "Contiene: Lápices Giotto, Block de hojas Luma, Lápiz grafito y Goma Pinto",
+      description: "Kit completo ideal para principiantes",
       emoji: "📦",
       featured: true,
-      featuredText: "El más elegido por alumnos nuevos"
+      featuredText: "El más elegido por alumnos nuevos",
+      discount: "11% OFF"
     },
     {
       id: 6,
@@ -72,10 +73,10 @@ const Productos = () => {
     },
     {
       id: 7,
-      name: "Goma Pinto",
+      name: "Goma Filgo",
       price: "$900",
       image: gomafilgo,
-      description: "Goma de borrar blanca de calidad para alumnos",
+      description: "Goma de borrar blanca de calidad para niños",
       emoji: "🧹"
     },
     {
@@ -268,6 +269,17 @@ const Productos = () => {
                   transition={{ duration: 0.4 }}
                   loading="lazy"
                 />
+                {product.discount && (
+                  <div className="absolute top-3 left-3 z-10">
+                    <motion.span 
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="bg-red-500 text-white font-black px-3 py-1 rounded-full shadow-lg text-sm flex items-center border border-white/20"
+                    >
+                      🔥 {product.discount}
+                    </motion.span>
+                  </div>
+                )}
               </div>
                 
                 <div className="p-6">
