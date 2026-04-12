@@ -13,6 +13,7 @@ import giottox12 from '../assets/LapicesGiotto12.png'
 import gomafilgo from '../assets/GomaFilgo.png'
 import lapizfilgo from '../assets/LapizFilgo.png'
 import LapizNegroRobertColor from '../assets/LapizNegroRobertColor.png'
+import maderasFibroFacil from '../assets/MaderasFibroFacil.png'
 
 const Productos = () => {
   const [selectedProducts, setSelectedProducts] = useState([])
@@ -92,6 +93,14 @@ const Productos = () => {
       image: LapizNegroRobertColor,
       description: "Lapiz negro de calidad para niños",
       emoji: "✏️"
+    },
+    {
+      id: 10,
+      name: "Maderas Fibrofacil",
+      price: "$3.000",
+      image: maderasFibroFacil,
+      description: "Cortes de fibrofácil ideales para técnica de puntillismo o pintura",
+      emoji: "🪵"
     }
   ]
 
