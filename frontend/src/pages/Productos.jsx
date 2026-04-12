@@ -4,7 +4,7 @@ import { FaShoppingCart, FaShoppingBag, FaTrash } from 'react-icons/fa'
 import RealisticBrushStrokes from '../components/ui/RealisticBrushStrokes'
 
 
-import capitoliox25 from '../assets/capitoliox25.jpg'
+import hojasLuma from '../assets/hojasluma.jpg'
 import acrilicosnormales from '../assets/AcrilicosNormales.jpg'
 import acrilicosfluo from '../assets/AcrilicosFluo.png'
 import caballeteportatil from '../assets/CaballetePortatil.png'
@@ -22,10 +22,10 @@ const Productos = () => {
   const products = [
     {
       id: 1,
-      name: "Block de Hojas Blancas",
-      price: "$3000",
-      image: capitoliox25,
-      description: "Block de 24 hojas lisas N°5, perfecto para dibujo, acuarela y pintura",
+      name: "Block de Hojas Luma",
+      price: "$3.000",
+      image: hojasLuma,
+      description: "Block de hojas lisas N°5 Luma, perfecto para dibujo y pintura",
       emoji: "📄"
     },
     {
@@ -57,7 +57,7 @@ const Productos = () => {
       name: "Kit Inicial Paradise",
       price: "$11.000",
       image: kitparadise,
-      description: "Kit completo ideal para principiantes",
+      description: "Contiene: Lápices Giotto, Block de hojas Luma, Lápiz grafito y Goma Pinto",
       emoji: "📦",
       featured: true,
       featuredText: "El más elegido por alumnos nuevos"
@@ -72,10 +72,10 @@ const Productos = () => {
     },
     {
       id: 7,
-      name: "Goma Filgo",
+      name: "Goma Pinto",
       price: "$900",
       image: gomafilgo,
-      description: "Goma de borrar blanca de calidad para niños",
+      description: "Goma de borrar blanca de calidad para alumnos",
       emoji: "🧹"
     },
     {
