@@ -140,7 +140,7 @@ const Productos = () => {
 
   const handleWhatsAppClick = () => {
     const phoneNumber = import.meta.env.VITE_WHATSAPP_NUMBER || "5491100000000";
-    const productNames = selectedProducts.map(p => `- ${p.quantity}x ${p.name} (${p.price} c/u)`).join('\n');
+    const productNames = selectedProducts.map(p => `- ${p.quantity}x ${p.name} (${p.price}${p.name.includes("Kit") ? "" : " c/u"})`).join('\n');
     const message = `¡Hola Taller Paradise! 🎨 Me gustaría pedir los siguientes materiales:\n\n${productNames}\n\n¿Tienen disponibilidad?`;
     
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
@@ -551,7 +551,7 @@ const Productos = () => {
                         <img src={product.image} alt={product.name} className="w-16 h-16 object-cover rounded-xl shadow-sm border border-gray-100" />
                         <div className="flex-1">
                           <h4 className="font-semibold text-gray-800 text-sm">{product.name}</h4>
-                          <p className="text-gray-500 text-xs font-medium mt-1">{product.price} c/u</p>
+                          <p className="text-gray-500 text-xs font-medium mt-1">{product.price}{product.name.includes("Kit") ? "" : " c/u"}</p>
                         </div>
                       </div>
                       

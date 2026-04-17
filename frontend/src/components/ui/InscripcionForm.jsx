@@ -265,7 +265,7 @@ const InscripcionForm = ({
                     <option value="">Selecciona un horario disponible</option>
                     <option value="Viernes 15:00 a 17:00">Viernes 15:00 a 17:00</option>
                     <option value="Sábados 9:00 a 11:00">Sábados 9:00 a 11:00</option>
-                    <option value="Sábados 15:00 a 17:00" disabled>Sábados 15:00 a 17:00 (Cupo lleno)</option>
+                    <option value="Sábados 15:00 a 17:00">Sábados 15:00 a 17:00</option>
                   </select>
                   {errors.horario && (
                     <motion.p 

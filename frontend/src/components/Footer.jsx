@@ -90,9 +90,9 @@ const Footer = () => {
                 <ClockIcon className="w-5 h-5 text-watercolor-yellow" />
                 <span>Sábados: 9:00 - 11:00</span>
               </div>
-              <div className="flex items-center space-x-2 text-gray-500">
-                <ClockIcon className="w-5 h-5 text-gray-500" />
-                <span>Sábados: 15:00 - 17:00 (Cupo lleno)</span>
+              <div className="flex items-center space-x-2">
+                <ClockIcon className="w-5 h-5 text-watercolor-yellow" />
+                <span>Sábados: 15:00 - 17:00</span>
               </div>
             </div>
           </div>
@@ -114,7 +114,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; 2024 Taller Paradise. Todos los derechos reservados.</p>
+          <p>&copy; 2026 Taller Paradise. Todos los derechos reservados.</p>
         </div>
       </div>
     </footer>
